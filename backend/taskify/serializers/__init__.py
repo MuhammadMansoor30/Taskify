@@ -1,1 +1,3 @@
 from .user_serializer import UserSerializer
+from .role_serializer import RoleSerializer
+from .permission_serializer import PermissionSerializer

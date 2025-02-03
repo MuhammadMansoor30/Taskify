@@ -4,4 +4,7 @@ class Permission(models.Model):
     name = models.CharField(max_length=255, null=False)
     code_name = models.CharField(max_length=255, null=False)
     description = models.TextField()
-    created_at = models.TimeField(auto_now=True)
+    created_at = models.TimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
