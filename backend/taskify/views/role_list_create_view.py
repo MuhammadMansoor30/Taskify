@@ -4,15 +4,18 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from taskify.models import Role, Permission
 from taskify.serializers import RoleSerializer
+from taskify.decorator import permission_required
 
 class RoleListCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @permission_required(["roles_get"])
     def get(self, *args, **kwargs):
         role = Role.objects.all()
         serializer = RoleSerializer(role, many=True)
         return Response(serializer.data)
     
+    @permission_required(["role_add"])
     def post(self, request, *args, **kwrags):
         data = request.data
         user = request.user
