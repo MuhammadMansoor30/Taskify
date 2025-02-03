@@ -1,0 +1,8 @@
+Steps to Use the taskify Application
+
+-> Add Permissions and Admin role using add_data.py script. This also created a new Admin user.
+-> Add Other Role after that as per need for other Users.
+-> Add Manager user to the aplication.
+-> Add Team associated with that manager to the app.
+-> Add Developer associated with the manager to the app.
+-> Add Task as task is associated with Manager, team and developer

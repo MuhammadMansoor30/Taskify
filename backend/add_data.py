@@ -25,7 +25,10 @@ permissions = [
     {"name": "Delete Team", "code_name": "team_delete", "description": "Can Delete a Team"},
     {"name": "Edit Task", "code_name": "task_edit", "description": "Can Edit a Task"},
     {"name": "Delete Task", "code_name": "task_delete", "description": "Can Delete a Task"},
-    {"name": "Delete Work", "code_name": "work_delete", "description": "Can Delete their published work"}
+    {"name": "Delete Work", "code_name": "work_delete", "description": "Can Delete their published work"},
+    {"name": "Add Role", "code_name": "role_add", "description": "Can Add a new Role"},
+    {"name": "Get Roles", "code_name": "roles_get", "description": "Can Get all Role"},
+    {"name": "Get Permissions", "code_name": "permissions_get", "description": "Can Get all Permissions"},
 ]
 
 def add_permissions_and_admin_role():
