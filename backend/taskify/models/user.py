@@ -33,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=250, null=False)
     email = models.EmailField(max_length=250, unique=True)
     password = models.CharField(max_length=250, null=False)
+    roles = models.ManyToManyField("Role", related_name="users")
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     cnic = models.CharField(max_length=250, null=False)
