@@ -19,7 +19,7 @@ class Task(models.Model):
     status = models.CharField(choices=STATUS_CHOICES, default="In Progress")
     priority = models.CharField(choices=SET_PRIORITY, null=False)
     assigned_to = models.ForeignKey("User", related_name="tasks", on_delete=models.CASCADE)
-    created_by = models.ManyToManyField("User", related_name="tasks")
+    created_by = models.ManyToManyField("User", related_name="created_tasks")
 
     def save(self, *args, **kwargs):
         if not self.assigned_to and self.team:

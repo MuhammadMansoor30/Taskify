@@ -6,3 +6,8 @@ Steps to Use the taskify Application
 -> Add Team associated with that manager to the app.
 -> Add Developer associated with the manager to the app.
 -> Add Task as task is associated with Manager, team and developer
+
+
+
+Imp: 
+-> To create a model named work where user will upload their work associated with a task and also have property of approved or rejected.
