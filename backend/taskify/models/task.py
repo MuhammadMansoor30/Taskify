@@ -1,12 +1,6 @@
 from django.db import models
 
 class Task(models.Model):
-    # STATUS_CHOICES = [
-    #     ('In Progress', 'In Progress'),
-    #     ('Partially Completed', 'Partially Completed'),
-    #     ('Completed', 'Completed'),
-    # ]
-
     SET_PRIORITY = [
         ('Low', "Low"),
         ('Medium', 'Medium'),
@@ -16,7 +10,6 @@ class Task(models.Model):
     title = models.CharField(max_length=255, null=False)
     description = models.TextField(null=True, blank=True)
     team = models.ForeignKey("Team", related_name="tasks", on_delete=models.SET_NULL, null=True)
-    # status = models.CharField(choices=STATUS_CHOICES, default="In Progress")
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(choices=SET_PRIORITY, null=False)
     assigned_to = models.ForeignKey("User", related_name="tasks", on_delete=models.SET_NULL, null=True)

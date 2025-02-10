@@ -17,4 +17,8 @@ urlpatterns = [
     path('tasks/', view=views.TaskListCreateView.as_view()),
     path('tasks/<int:pk>/update/', view=views.TaskUpdateDestroyView.as_view()),
     path('tasks/<int:pk>/delete/', view=views.TaskUpdateDestroyView.as_view()),
+    path('workItems/', view=views.WorkItemListCreateView.as_view()),
+    path('workItems/<int:pk>/update/', view=views.WorkItemUpdateDestroyView.as_view()),
+    path('workItems/<int:pk>/delete/', view=views.WorkItemUpdateDestroyView.as_view()),
+    path('workItems/<int:pk>/approve/', view=views.WorkItemApproveView.as_view()),
 ]

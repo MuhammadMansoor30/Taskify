@@ -32,6 +32,10 @@ permissions = [
     {"name": "Get Tasks", "code_name": "tasks_get", "description": "Can Get all Tasks"},
     {"name": "Get Developers", "code_name": "developers_get", "description": "Can Views all Developers"},
     {"name": "Get Developers", "code_name": "developers_get", "description": "Can Views all Developers"},
+    {"name": "Edit Work", "code_name": "work_edit", "description": "Can Edit the uploaded Work"},
+    {"name": "Get Work", "code_name": "work_get", "description": "Can View the uploaded Work"},
+    {"name": "Get Teams", "code_name": "teams_get", "description": "Can View the Teams"},
+    {"name": "Get Managers", "code_name": "manager_get", "description": "Can View the Managers"}, 
 ]
 
 def add_permissions_and_admin_role():
@@ -77,9 +81,9 @@ if __name__ == "__main__":
     print("Adding Permissions and Admin Role")
     add_permissions_and_admin_role()
 
-    try:
-        User.objects.get(email='admin@email.com', is_staff=True)
-    except User.DoesNotExist:
-        print("Creating and adding superUser")
-        createSuperUser()
+    # try:
+    #     User.objects.get(email='admin@email.com', is_staff=True)
+    # except User.DoesNotExist:
+    #     print("Creating and adding superUser")
+    #     createSuperUser()
     

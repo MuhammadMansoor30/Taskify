@@ -5,3 +5,4 @@ from .manager import Manager
 from .team import Team
 from .developer import Developer
 from .task import Task
+from .workItem import WorkItem
