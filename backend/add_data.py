@@ -29,6 +29,9 @@ permissions = [
     {"name": "Add Role", "code_name": "role_add", "description": "Can Add a new Role"},
     {"name": "Get Roles", "code_name": "roles_get", "description": "Can Get all Role"},
     {"name": "Get Permissions", "code_name": "permissions_get", "description": "Can Get all Permissions"},
+    {"name": "Get Tasks", "code_name": "tasks_get", "description": "Can Get all Tasks"},
+    {"name": "Get Developers", "code_name": "developers_get", "description": "Can Views all Developers"},
+    {"name": "Get Developers", "code_name": "developers_get", "description": "Can Views all Developers"},
 ]
 
 def add_permissions_and_admin_role():
