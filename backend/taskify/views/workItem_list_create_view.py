@@ -15,6 +15,7 @@ class WorkItemListCreateView(APIView):
         workItem_ser = self.serializer_class(workItems, many=True)
         return Response(workItem_ser.data, status=status.HTTP_200_OK)
 
+    @permission_required(['work_publish'])
     def post(self, request, *args, **kwargs):
         user = request.user
         data = request.data
