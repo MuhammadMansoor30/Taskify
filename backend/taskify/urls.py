@@ -11,4 +11,10 @@ urlpatterns = [
     path('teams/', view=views.TeamListCreateView.as_view()),
     path('teams/<int:pk>/update/', view=views.TeamUpdateDestroyView.as_view()),
     path('teams/<int:pk>/delete/', view=views.TeamUpdateDestroyView.as_view()),
+    path('developers/', view=views.DeveloperListCreateView.as_view()),
+    path('developers/<int:pk>/update/', view=views.DeveloperUpdateDestroyView.as_view()),
+    path('developers/<int:pk>/delete/', view=views.DeveloperUpdateDestroyView.as_view()),
+    path('tasks/', view=views.TaskListCreateView.as_view()),
+    path('tasks/<int:pk>/update/', view=views.TaskUpdateDestroyView.as_view()),
+    path('tasks/<int:pk>/delete/', view=views.TaskUpdateDestroyView.as_view()),
 ]
