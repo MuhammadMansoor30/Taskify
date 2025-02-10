@@ -10,6 +10,7 @@ class ManagerListCreateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ManagerSerializer
 
+    @permission_required(['manager_get'])
     def get(self, *args, **kwargs):
         manager = Manager.objects.all()
         serializer = self.serializer_class(manager, many=True)

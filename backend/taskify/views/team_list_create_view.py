@@ -10,6 +10,7 @@ class TeamListCreateView(APIView):
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
 
+    @permission_required(['teams_get'])
     def get(self, *args, **kwargs):
         teams = Team.objects.all()
         team_ser = self.serializer_class(teams, many=True)

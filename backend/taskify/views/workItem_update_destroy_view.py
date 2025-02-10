@@ -11,6 +11,7 @@ class WorkItemUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkItemSerializer
 
+    @permission_required(['work_edit'])
     def put(self, request, pk):
         try:
             workItem = WorkItem.objects.get(pk=pk)
@@ -56,5 +57,5 @@ class WorkItemApproveView(APIView):
     
         workItem.is_approved = True
         workItem.save()
-        
+
         return Response({"Msg": "Approved Successfully"}, status=status.HTTP_200_OK)

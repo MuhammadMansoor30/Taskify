@@ -10,6 +10,7 @@ class WorkItemListCreateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkItemSerializer
 
+    @permission_required(['work_get'])
     def get(self, *args, **kwargs):
         workItems = WorkItem.objects.all()
         workItem_ser = self.serializer_class(workItems, many=True)
