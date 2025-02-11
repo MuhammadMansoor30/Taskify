@@ -5,9 +5,8 @@ Steps to Use the taskify Application
 -> Add Manager user to the aplication.
 -> Add Team associated with that manager to the app.
 -> Add Developer associated with the manager to the app.
--> Add Task as task is associated with Manager, team and developer
+-> Add Task as task is associated with Manager, team and developer.
+-> Add Work associated with the Task.
 
-
-
-Imp: 
--> To create a model named work where user will upload their work associated with a task and also have property of approved or rejected.
+->  To generate Api Keys for the fontend applications to access the Django server we will install api-key package using: djangorestframework-api-key=={version no}
+-> Then add it in the settings.py file under the installed apps and apply migrations. The Api Keys will appeasr in the Admin panel and we can add keys now.

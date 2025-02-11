@@ -5,14 +5,17 @@ from rest_framework.permissions import IsAuthenticated
 from taskify.models import WorkItem, Task
 from taskify.serializers import WorkItemSerializer
 from taskify.decorator import permission_required
+from taskify.filters import WorkItemFilters
 
 class WorkItemListCreateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkItemSerializer
+    filterset_class = WorkItemFilters
 
     @permission_required(['work_get'])
     def get(self, *args, **kwargs):
         workItems = WorkItem.objects.all()
+        workItems = WorkItemFilters(self.request.GET, queryset=workItems).qs    # Gets the queryset using the query params from the url and applies filters
         workItem_ser = self.serializer_class(workItems, many=True)
         return Response(workItem_ser.data, status=status.HTTP_200_OK)
 
