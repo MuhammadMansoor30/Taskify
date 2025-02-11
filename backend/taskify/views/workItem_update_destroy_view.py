@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,12 +12,21 @@ class WorkItemUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkItemSerializer
 
+    def get_workItem(self, pk):
+        try:
+            return WorkItem.objects.get(pk=pk)
+        except WorkItem.DoesNotExist:
+            raise Http404({"Msg": "Work Item for the provided id does not exist!"})
+
+    @permission_required(['work_get'])
+    def get(self, request, pk):
+        workItem = self.get_workItem(pk=pk)
+        workItem_ser = WorkItemSerializer(workItem)
+        return Response(workItem_ser.data, status=status.HTTP_200_OK)   
+
     @permission_required(['work_edit'])
     def put(self, request, pk):
-        try:
-            workItem = WorkItem.objects.get(pk=pk)
-        except WorkItem.DoesNotExist:
-            return Response({"Msg": "Work Item for the provided id does not exist!"}, status=status.HTTP_404_NOT_FOUND)
+        workItem = self.get_workItem(pk=pk)
         
         workItem_ser = self.serializer_class(workItem, data=request.data, partial=True)
         if workItem_ser.is_valid():

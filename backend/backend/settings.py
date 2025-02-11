@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_api_key', 
+    'django_filters',
     # apps
     'taskify'
 
@@ -143,12 +144,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Self added for deafult items.
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'taskify.authenticate.CustomAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         'rest_framework.permissions.IsAuthenticated'
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ]
 }
 
