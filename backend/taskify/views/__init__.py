@@ -1,4 +1,5 @@
 from .login_view import LoginView
+from .logout_view import LogoutView
 from .permission_list_view import PermissionListView
 from .role_list_create_view import RoleListCreateView
 from .manager_list_create_view import ManagerListCreateView
