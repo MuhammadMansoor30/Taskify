@@ -7,11 +7,12 @@ import { mapActions } from 'vuex';
 
 export default {
   mounted(){
-    this.loadCookies();
+    // this.loadCookies();
+    this.currentUser();
     this.$store.commit('setNavMenuItems');
   },
   methods: {
-    ...mapActions(['loadCookies']),
+    ...mapActions(['loadCookies', 'currentUser']),
   }
 }
 

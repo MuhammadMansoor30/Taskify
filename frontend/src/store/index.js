@@ -80,7 +80,22 @@ export default createStore({
         const res = await loginApi.post('login/', data);
         if (res.status === 200 && res.data.User){
           context.commit('login', res.data.User);
-          context.commit('setCookies', res.data);
+          context.commit('setNavMenuItems');
+          // context.commit('setCookies', res.data);
+          return res.data;
+        }
+      }
+      catch (error){
+        console.log(error);
+      }
+    },
+
+    currentUser: async (context) => {
+      try{
+        const res = await  loginApi.get('currentuser/');
+        if(res.status === 200 && res.data.User){
+          context.commit('login', res.data.User);
+          context.commit('setNavMenuItems');
           return res.data;
         }
       }
