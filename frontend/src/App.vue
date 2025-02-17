@@ -1,19 +1,29 @@
 <template>
-  <router-view/>
+  <router-view :navItems="navItems" :navigateTo="navigateTo" />
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   mounted(){
-    // this.loadCookies();
-    this.currentUser();
+    this.loadUserData();
+    // this.currentUser();
     this.$store.commit('setNavMenuItems');
   },
   methods: {
-    ...mapActions(['loadCookies', 'currentUser']),
-  }
+    ...mapActions(['loadUserData', 'currentUser']),
+    ...mapGetters(['hasPermissions', 'getNavMenuItems']),
+    navigateTo(page) {
+      console.log(page);
+      this.$router.push({ name: page });
+    },
+  },
+  data() {
+    return {
+      navItems: this.getNavMenuItems(),
+    }
+  },
 }
 
 </script>
@@ -21,11 +31,12 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Afacad', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #e2dbd4;
   text-align: center;
-  color: #2c3e50;
+  color: #800020;
 }
 
 nav {
@@ -34,7 +45,7 @@ nav {
 
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #800020;
 }
 
 nav a.router-link-exact-active {
