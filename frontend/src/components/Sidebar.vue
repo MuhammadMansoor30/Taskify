@@ -1,16 +1,19 @@
 <template>
-    <div class="home d-flex">
-        <div class="sidebar bg-light text-dark">
-            <b-navbar toggleable="lg" type="light" variant="light" class="border-bottom">
+    <div>
+        <div class="sidebar text-dark">
+            <b-navbar toggleable="lg" type="light" class="border-bottom">
                 <b-navbar-brand href="#" class="font-weight-bold">
-                    Taskify
+                    Taskify Functions
                 </b-navbar-brand>
             </b-navbar>
 
             <b-nav vertical>
-                <b-nav-item v-for="(item, index) in navItems" :key="index" href="#"
-                    @click.prevent="navigateTo(item.route)" class="sidebar-nav-item">
-                    <i :class="item.icon" class="mr-5"></i>{{ item.title }}
+                <b-nav-item v-for="(item, index) in navItems" :key="index" href="#" @click.prevent="navigateTo(item.route);"
+                    :class="{ active: item.title === this.$route.meta.title}"
+                    class="sidebar-nav-item py-2 px-3 d-flex flex-row ">
+                    <i :class="item.icon"></i>
+                    <span :class="{'text-dark': item.title !== this.$route.meta.title, 'text-light': item.title === this.$route.meta.title}" 
+                        class="m-3 font-weight-bold h4">{{ item.title }}</span>
                 </b-nav-item>
             </b-nav>
         </div>
@@ -25,13 +28,13 @@ export default {
 
 <style scoped>
 .sidebar {
-    width: 280px;
+    width: 300px;
     padding-top: 30px;
     position: fixed;
     height: 100%;
     left: 0;
     top: 0;
-    background-color: #f8f9fa;
+    background-color: #e2dbd4;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
@@ -39,7 +42,7 @@ export default {
 .sidebar .b-navbar {
     padding: 1rem;
     background-color: #343a40;
-    color: white;
+    color: #e2dbd4;
 }
 
 .sidebar .b-navbar-brand {
@@ -56,12 +59,12 @@ export default {
 
 .sidebar .b-nav-item:hover {
     background-color: #007bff;
-    color: white;
+    color: #e2dbd4;
 }
 
 .sidebar .b-nav-item.active {
     background-color: #0056b3;
-    color: white;
+    color: #e2dbd4;
 }
 
 .flex-grow-1 {
@@ -69,15 +72,27 @@ export default {
 }
 
 .sidebar-nav-item i {
-    font-size: 1.2rem;
-    color: #6c757d;
+    font-size: 1.5rem;
+    color: #800020;
 }
 
-.sidebar-nav-item:hover i {
-    color: white;
+.sidebar-nav-item:hover {
+    background-color: #f1f1f1;
+}
+
+.sidebar-nav-item.active {
+    background-color: #800020;
+    color: #e2dbd4;
+}
+
+.sidebar-nav-item.active  i {
+    color: #e2dbd4;
 }
 
 .sidebar .b-nav-item+.b-nav-item {
     margin-top: 5px;
 }
 </style>
+
+
+<!-- #242124  Color for text-->
