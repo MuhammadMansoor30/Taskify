@@ -16,8 +16,13 @@ export default createStore({
     getIsLoggedIn: state => {
       return state.isLoggedIn;
     },
-    hasPermissions: state => {
-      return state.user.permissions;
+    hasPermissions: (state) => (permission) => {
+      if (state.user){
+        return state.user.permissions.includes(permission);
+      }
+      else{
+        return false;
+      }
     },
     getNavMenuItems: state => {
       return state.navMenuItems;
