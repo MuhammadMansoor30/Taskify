@@ -1,5 +1,5 @@
 <template>
-  <router-view :navItems="navItems" :navigateTo="navigateTo" />
+  <router-view />
 </template>
 
 <script>
@@ -13,16 +13,6 @@ export default {
   },
   methods: {
     ...mapActions(['loadUserData', 'currentUser']),
-    ...mapGetters(['hasPermissions', 'getNavMenuItems']),
-    navigateTo(page) {
-      console.log(page);
-      this.$router.push({ name: page });
-    },
-  },
-  data() {
-    return {
-      navItems: this.getNavMenuItems(),
-    }
   },
 }
 

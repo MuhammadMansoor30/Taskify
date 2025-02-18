@@ -1,6 +1,6 @@
 <template>
     <div class="home d-flex">
-        <sidebar :navItems="navItems" :navigateTo="navigateTo"></sidebar>
+        <sidebar ></sidebar>
 
         <div class="flex-grow-1 p-3">
             <h2 class="my-4">Teams Page</h2>
@@ -12,7 +12,6 @@
 import Sidebar from '@/components/Sidebar.vue';
 
 export default {
-    props: ['navItems', 'navigateTo'],
     components: {
         Sidebar,
     },

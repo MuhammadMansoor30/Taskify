@@ -8,11 +8,12 @@
             </b-navbar>
 
             <b-nav vertical>
-                <b-nav-item v-for="(item, index) in navItems" :key="index" href="#" @click.prevent="navigateTo(item.route);"
-                    :class="{ active: item.title === this.$route.meta.title}"
+                <b-nav-item v-for="(item, index) in navItems" :key="index" href="#"
+                    @click.prevent="navigateTo(item.route);" :class="{ active: item.title === this.$route.meta.title }"
                     class="sidebar-nav-item py-2 px-3 d-flex flex-row ">
                     <i :class="item.icon"></i>
-                    <span :class="{'text-dark': item.title !== this.$route.meta.title, 'text-light': item.title === this.$route.meta.title}" 
+                    <span
+                        :class="{ 'text-dark': item.title !== this.$route.meta.title, 'text-light': item.title === this.$route.meta.title }"
                         class="m-3 font-weight-bold h4">{{ item.title }}</span>
                 </b-nav-item>
             </b-nav>
@@ -21,14 +22,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-    props: ['navItems', 'navigateTo'],
+    methods: {
+        ...mapGetters(['getNavMenuItems']),
+        navigateTo(page) {
+            this.$router.push({ name: page });
+        },
+    },
+    data() {
+        return {
+            navItems: this.getNavMenuItems(),
+        }
+    },
 };
 </script>
 
 <style scoped>
 .sidebar {
-    width: 300px;
+    width: 320px;
     padding-top: 30px;
     position: fixed;
     height: 100%;
@@ -85,7 +98,7 @@ export default {
     color: #e2dbd4;
 }
 
-.sidebar-nav-item.active  i {
+.sidebar-nav-item.active i {
     color: #e2dbd4;
 }
 
