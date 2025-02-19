@@ -1,19 +1,72 @@
 <template>
-    <div class="home d-flex">
-        <sidebar ></sidebar>
+    <div class="home d-flex flex-row">
+        <sidebar class="col-12 col-lg-2" />
 
-        <div class="flex-grow-1 p-3">
-            <h2 class="my-4">Teams Page</h2>
-        </div>
+        <data-table title="Taskify Teams List" tableTitle="Teams" :fields="fields" :items="items" :editData="editData"
+            :deleteData="deleteData" hasCreatePermission="team_add" />
+
     </div>
-</template>
 
+</template>
 <script>
 import Sidebar from '@/components/Sidebar.vue';
+import DataTable from '@/components/DataTable.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     components: {
         Sidebar,
+        DataTable
+    },
+    mounted() {
+        this.getTeams();
+    },
+    data() {
+        return {
+            fields: [
+                { key: 'index', label: "Id", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
+                { key: 'name', label: 'Name', thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'project_name', label: "Project Name", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'manager', label: "Manager", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
+            ],
+            items: null,
+        }
+    },
+    methods: {
+        ...mapActions(['getTeamsData', 'getManagerById']),
+        editData(data) {
+            console.log(data);
+        },
+        deleteData(data) {
+            console.log(data);
+        },
+        async getTeams() {
+            try {
+                const data = await this.getTeamsData();
+                // Due to the reactivity system of Vue to cause changes and modify the items we have to wait for the promise to resolve and then our items will be updated else old data withour chnages will be passed.
+                await Promise.all(data.map(async val =>{
+                    const manager = await this.getManagerId(val.manager);
+                    val.manager = manager['full_name'];
+                }));  
+                this.items = data;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
+        async getManagerId(id) {
+            try {
+                const data = await this.getManagerById({ id });
+                return data;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['hasPermissions']),
     },
 };
 </script>
@@ -22,29 +75,5 @@ export default {
 .home {
     display: flex;
     min-height: 100vh;
-}
-
-.sidebar {
-    width: 400px;
-    padding-top: 20px;
-    position: fixed;
-    height: 100%;
-    left: 0;
-    top: 0;
-    background-color: #f8f9fa;
-    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar .b-nav-item {
-    cursor: pointer;
-}
-
-.flex-grow-1 {
-    margin-left: 250px;
-    /* Leave space for the sidebar */
-}
-
-.b-button {
-    margin-bottom: 20px;
 }
 </style>

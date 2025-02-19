@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const backendApi = axios.create({
-    baseURL: process.env.DJANGO_APP_URL,
+    baseURL: process.env.VUE_APP_BACKEND_URL,
+    // baseURL: 'http://localhost:8000/taskify/',
     headers: {
         "Content-Type": "application/json",
     },
@@ -9,6 +10,7 @@ export const backendApi = axios.create({
 });
 
 export const loginApi = axios.create({
+    // baseURL: process.env.VUE_APP_BACKEND_URL,
     baseURL: 'http://localhost:8000/taskify/',
     headers: {
         "Content-Type": "application/json",
@@ -18,7 +20,7 @@ export const loginApi = axios.create({
 });
 
 export const fileApi = axios.create({
-    baseURL: process.env.DJANGO_APP_URL,
+    baseURL: process.env.VUE_APP_BACKEND_URL,
     headers: {
         "Content-Type": "multipart/form-data"
     },
