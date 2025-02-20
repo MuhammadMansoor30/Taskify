@@ -9,6 +9,7 @@ from taskify.models import User, Permission, Role
 
 permissions = [
     {"name": "Create User", "code_name": "user_create", "description": "Can Create a User"},
+    {"name": "Get Users", "code_name": "users_get", "description": "Can Get all Users"},
     {"name": "Add Manager", "code_name": "manager_add", "description": "Can Add a Manager"},
     {"name": "Add Developer", "code_name": "developer_add", "description": "Can Add a Developer"},
     {"name": "Add Team", "code_name": "team_add", "description": "Can Add a new Team"},
@@ -36,6 +37,9 @@ permissions = [
     {"name": "Get Work", "code_name": "work_get", "description": "Can View the uploaded Work"},
     {"name": "Get Teams", "code_name": "teams_get", "description": "Can View the Teams"},
     {"name": "Get Managers", "code_name": "manager_get", "description": "Can View the Managers"}, 
+    {"name": "Get Manager Name", "code_name": "manager_get_id", "description": "Can Get the name of Manager"}, 
+    {"name": "Get Team Name", "code_name": "team_get_id", "description": "Can Get the name of Team"}, 
+    {"name": "Get Task Name", "code_name": "task_get_id", "description": "Can Get the name of Task"}, 
 ]
 
 def add_permissions_and_admin_role():

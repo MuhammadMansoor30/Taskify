@@ -17,7 +17,7 @@ class ManagerUpdateDestroyView(APIView):
         except Manager.DoesNotExist:
             raise Http404({"Msg": "Manager with the given id does not exist!"})
 
-    @permission_required(['manager_get'])
+    @permission_required(['manager_get_id'])
     def get(self, request, pk):
         manager = self.get_manager_by_id(pk=pk)
         manager_ser = ManagerSerializer(manager)

@@ -30,6 +30,36 @@ const routes = [
     name: 'team',
     meta: {title: 'Teams'},
     component: () => import('../views/TeamsView.vue'),
+  },
+  {
+    path: '/developer',
+    name: 'developer',
+    meta: {title: 'Developers'},
+    component: () => import('../views/DevelopersView.vue'),
+  },
+  {
+    path: '/task',
+    name: "task",
+    meta: {title: "Tasks"},
+    component: () => import('../views/TasksView.vue'),
+  },
+  {
+    path: '/workItems',
+    name: "work",
+    meta: {title: "Work Items"},
+    component: () => import('../views/WorkItemsView.vue'),
+  },
+  {
+    path: '/roles',
+    name: 'role',
+    meta: {title: "Roles"},
+    component: () => import('../views/RolesView.vue'),
+  },
+  {
+    path: '/approveWork',
+    name: "approveWork",
+    meta: {title: "Approve Work"},
+    component: () => import('../views/ApproveWorkView.vue'),
   }
 ]
 
