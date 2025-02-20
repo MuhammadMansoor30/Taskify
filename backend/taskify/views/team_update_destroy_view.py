@@ -17,7 +17,7 @@ class TeamUpdateDestroyView(APIView):
         except Team.DoesNotExist:
             raise Http404({"Msg": "Team with the provided id does not exist"})
     
-    @permission_required(['teams_get'])
+    @permission_required(['team_get_id'])
     def get(self, request, pk):
         team = self.get_team_by_id(pk=pk)
         team_ser = TeamSerializer(team)

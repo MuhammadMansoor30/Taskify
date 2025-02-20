@@ -17,7 +17,7 @@ class TaskUpdateDestroyView(APIView):
         except Task.DoesNotExist:
             raise Http404({"Msg": "Task for the provided id does not exist!"})
     
-    @permission_required(['tasks_get'])
+    @permission_required(['task_get_id'])
     def get(self, request, pk):
         task = self.get_task_by_id(pk=pk)
         task_ser = TaskSerializer(task)
