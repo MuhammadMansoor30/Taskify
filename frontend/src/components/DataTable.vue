@@ -27,8 +27,9 @@
 
                         <template #cell(button)="data">
                             <div class="d-flex justify-content-evenly">
-                                <button class="btn clr" @click="editData(data.item)">Edit</button>
-                                <button class="btn btn-danger" @click="deleteData(data.item)">Delete</button>
+                                <button class="btn clr" @click="editData(data.item)" v-if="!this.approvalPermission">Edit</button>
+                                <button class="btn btn-danger" @click="deleteData(data.item)" v-if="!this.approvalPermission">Delete</button>
+                                <button class="btn clr-1" @click="approveWork(data.item)" v-if="this.approvalPermission">Approve</button>
                             </div>
                         </template>
                     </b-table>
@@ -44,14 +45,16 @@ import { mapGetters } from 'vuex';
 export default {
     mounted() {
         this.permission = this.hasPermissions(this.hasCreatePermission);
+        this.approvalPermission = this.hasPermissions(this.hasApprovalPermission);
     },
     data() {
         return {
             permission: false,
+            approvalPermission: false,
             tableItems: null,
         }
     },
-    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'hasCreatePermission'],
+    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'approveWork', 'hasCreatePermission', 'hasApprovalPermission'],
     computed: {
         ...mapGetters(['hasPermissions']),
     },

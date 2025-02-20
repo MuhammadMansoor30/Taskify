@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { backendApi, loginApi } from '@/backendApi';
+import { backendApi, fileApi, loginApi } from '@/backendApi';
 // import Cookies from 'js-cookie';    // Have to install js-cookie to use cookies
 
 export default createStore({
@@ -9,6 +9,10 @@ export default createStore({
     navMenuItems: [],
     managers: [],
     teams: [],
+    developers: [],
+    tasks: [],
+    workItems: [],
+    roles: [],
   },
 
   getters: {
@@ -34,6 +38,18 @@ export default createStore({
     },
     getTeams: state => {
       return state.teams;
+    },
+    getDevelopers: state => {
+      return state.developers;
+    },
+    getTasks: state => {
+      return state.tasks;
+    },
+    getWorkItems: state => {
+      return state.workItems;
+    },
+    getRoles: state => {
+      return state.roles;
     },
   },
 
@@ -65,7 +81,7 @@ export default createStore({
         state.navMenuItems.push({ title: "Teams", route: "team", icon: "fas fa-users" });
       }
       if (state.user.permissions.includes('work_get')) {
-        state.navMenuItems.push({ title: "Work", route: "work", icon: "fas fa-file-circle-plus" });
+        state.navMenuItems.push({ title: "Work Items", route: "work", icon: "fas fa-file-circle-plus" });
       }
       if (state.user.permissions.includes('developers_get')) {
         state.navMenuItems.push({ title: "Developers", route: "developer", icon: "fas fa-users" });
@@ -99,6 +115,22 @@ export default createStore({
 
     setTeams: (state, data) => {
       state.teams = data;
+    },
+
+    setDevelopers: (state, data) => {
+      state.developers = data;
+    },
+
+    setTasks: (state, data) => {
+      state.tasks = data;
+    },
+
+    setWorkItems: (state, data) => {
+      state.workItems = data;
+    },
+
+    setRoles: (state, data) => {
+      state.roles = data;
     }
   },
 
@@ -133,42 +165,124 @@ export default createStore({
     },
 
     getManagersData: async (context) => {
-      try{
+      try {
         const res = await backendApi.get('managers/');
-        if(res.status === 200){
+        if (res.status === 200) {
           context.commit('setManagers', res.data);
           return res.data;
         }
       }
-      catch (error){
+      catch (error) {
         console.log(error);
       }
     },
 
     getManagerById: async (context, payload) => {
-      try{
-        const {id} = payload;
+      try {
+        const { id } = payload;
         if (id) {
           const res = await backendApi.get(`managers/${id}/`);
-          if (res.status === 200){
+          if (res.status === 200) {
             return res.data;
           }
         }
       }
-      catch(error){
+      catch (error) {
         console.log(error);
       }
     },
 
     getTeamsData: async (context) => {
-      try{
+      try {
         const res = await backendApi.get('teams/');
-        if(res.status === 200){
+        if (res.status === 200) {
           context.commit('setTeams', res.data);
           return res.data;
         }
       }
-      catch (error){
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getTeamById: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.get(`teams/${id}/`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getDevelopersData: async (context) => {
+      try {
+        const res = await backendApi.get('developers/');
+        if (res.status === 200) {
+          context.commit('setDevelopers', res.data);
+          return res.data;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getTasksData: async (context) => {
+      try {
+        const res = await backendApi.get('tasks/');
+        if (res.status === 200) {
+          context.commit('setTasks', res.data);
+          return res.data;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getTaskById: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.get(`tasks/${id}/`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getWorkItemsData: async (context, payload) => {
+      try {
+        const {is_approved} = payload;
+        const res = await fileApi.get(`workItems/?is_approved=${is_approved}`);
+        if (res.status === 200) {
+          context.commit('setWorkItems', res.data);
+          return res.data;
+        }
+
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getRolesData: async (context) => {
+      try {
+        const res = await backendApi.get('roles/');
+        if (res.status === 200) {
+          context.commit('setRoles', res.data);
+          return res.data;
+        }
+      }
+      catch (error) {
         console.log(error);
       }
     },
