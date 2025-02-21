@@ -3,15 +3,16 @@
         <div class="p-3">
             <h2 class="my-4">{{ title }}</h2>
         </div>
-        <div class="d-flex justify-content-end px-3" v-if="this.permission">
+        <div class="d-flex justify-content-end px-3 " v-if="this.permission">
             <button class="btn clr-1 fs-5 rounded p-1">
                 <i class="fas fa-add"></i>
                 Create
             </button>
         </div>
         <div class="container-fluid my-5">
-            <div class="card shadow-sm">
-                <div class="card-header" style="background-color: #800020; color: #ececec;">
+            <!-- Can also change the border rounded radius using rounded-4 or rounded-5 so on -->
+            <div class="card shadow-sm rounded-4">   
+                <div class="card-header rounded-top-4" style="background-color: #800020; color: #ececec;">
                     <h4 class="mb-0">{{ tableTitle }}</h4>
                 </div>
                 <div class="card-body">

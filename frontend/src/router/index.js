@@ -60,6 +60,18 @@ const routes = [
     name: "approveWork",
     meta: {title: "Approve Work"},
     component: () => import('../views/ApproveWorkView.vue'),
+  },
+  {
+    path: '/users',
+    name: 'user',
+    meta: {title: "Users"},
+    component: () => import('../views/UsersView.vue'),
+  },
+  {
+    path: '/publishWork',
+    name: 'publishWork',
+    meta: {title: "Publish Work"},
+    component: () => import('../views/PublishWorkView.vue'),
   }
 ]
 
