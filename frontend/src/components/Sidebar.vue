@@ -10,13 +10,14 @@
             <b-nav vertical>
                 <b-nav-item v-for="(item, index) in navItems" :key="index" href="#"
                     @click.prevent="navigateTo(item.route);" :class="{ active: item.title === this.$route.meta.title }"
-                    class="sidebar-nav-item py-2 px-3 d-flex flex-row ">
+                    class="sidebar-nav-item d-flex flex-row p-2 mx-1 rounded-4">
                     <i :class="item.icon"></i>
                     <span
                         :class="{ 'text-dark': item.title !== this.$route.meta.title, 'text-light': item.title === this.$route.meta.title }"
                         class="m-3 font-weight-bold h4">{{ item.title }}</span>
                 </b-nav-item>
             </b-nav>
+            <button class="btn btn-success my-5 mx-3 fs-5 rounded-5" @click="signOut()">Sign Out</button>
         </div>
     </div>
 </template>
@@ -30,6 +31,16 @@ export default {
         navigateTo(page) {
             this.$router.push({ name: page });
         },
+        async signOut(){
+            try{
+                const res = await this.$store.dispatch("logout");
+                this.$router.replace({name: 'login'});   // To remove all the previous router history
+                return res;
+            }
+            catch(error){
+                console.log(error);
+            }
+        }
     },
     data() {
         return {
@@ -41,6 +52,8 @@ export default {
 
 <style scoped>
 .sidebar {
+    display: flex;
+    flex-direction: column;
     width: 320px;
     padding-top: 30px;
     position: fixed;

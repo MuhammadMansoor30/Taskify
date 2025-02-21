@@ -13,6 +13,7 @@ export default createStore({
     tasks: [],
     workItems: [],
     roles: [],
+    users: [],
   },
 
   getters: {
@@ -51,6 +52,9 @@ export default createStore({
     getRoles: state => {
       return state.roles;
     },
+    getUsers: state => {
+      return state.users;
+    },
   },
 
   mutations: {
@@ -64,9 +68,19 @@ export default createStore({
       state.user = data;
     },
 
+    logout: (state, data) => {
+      state.isLoggedIn = false;
+      state.user = null;
+    },
+
     setUserData: (state, data) => {
       localStorage.setItem('user', JSON.stringify(data.User));
       localStorage.setItem('isLoggedIn', true);
+    },
+
+    removeUserData: (state) => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('isLoggedIn');
     },
 
     setNavMenuItems: (state) => {
@@ -131,6 +145,10 @@ export default createStore({
 
     setRoles: (state, data) => {
       state.roles = data;
+    },
+
+    setUsers: (state, data) => {
+      state.users = data;
     }
   },
 
@@ -146,6 +164,20 @@ export default createStore({
         }
       }
       catch (error) {
+        console.log(error);
+      }
+    },
+
+    logout: async (context, data) => {
+      try{
+        const res = await loginApi.post('logout/');
+        if(res.status === 200){
+          context.commit('logout');
+          context.commit('removeUserData');
+          return res.data;
+        }
+      }
+      catch(error){
         console.log(error);
       }
     },
@@ -283,6 +315,32 @@ export default createStore({
         }
       }
       catch (error) {
+        console.log(error);
+      }
+    },
+
+    getUsersData: async (context) => {
+      try{
+        const res = await backendApi.get('users/');
+        if(res.status === 200){
+          context.commit('setUsers', res.data);
+          return res.data;
+        }
+      }
+      catch(error){
+        console.log(error);
+      }
+    },
+
+    addWorkItem: async (context, payload) => {
+      try{
+        const res = await fileApi.post('workItems/', payload);
+        if(res.status === 201){
+          console.log("Backend Res", res.data);
+          return res.data;
+        }
+      }
+      catch(error){
         console.log(error);
       }
     },
