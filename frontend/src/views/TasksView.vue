@@ -2,9 +2,12 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table title="Taskify Tasks List" tableTitle="Tasks" :fields="fields" :items="items" :editData="editData"
+        <data-table v-if="!isLoading" title="Taskify Tasks List" tableTitle="Tasks" :fields="fields" :items="items" :editData="editData"
             :deleteData="deleteData" hasCreatePermission="task_add" />
 
+        <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
+            <b-spinner></b-spinner>
+        </div>
     </div>
 
 </template>
@@ -35,6 +38,7 @@ export default {
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
+            isLoading: false,
         }
     },
     methods: {
@@ -58,21 +62,23 @@ export default {
             }
         },
         async getTasks() {
+            this.isLoading = true;
             try {
                 const data = await this.getTasksData();
                 await Promise.all(data.map(async val => {
                     const newDate = dayjs(val.duration).format('DD-MMM-YYYY');
-                    if (val.team){
+                    if (val.team) {
                         const teamName = await this.getTeamName(val.team);
                         val.team = teamName['name'];
                     }
-                    else{
+                    else {
                         val.team = 'None';
                     }
                     this.setCellVariants(val);
                     val.duration = newDate;
                 }));
                 this.items = data;
+                this.isLoading = false;
             }
             catch (error) {
                 console.log(error);

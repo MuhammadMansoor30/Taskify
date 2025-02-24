@@ -2,9 +2,12 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table title="Taskify Users List" tableTitle="Users" :fields="fields" :items="items" :editData="editData"
+        <data-table v-if="!isLoading" title="Taskify Users List" tableTitle="Users" :fields="fields" :items="items" :editData="editData"
             :deleteData="deleteData" has-create-permission="user_create" />
 
+        <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
+            <b-spinner></b-spinner>
+        </div>
     </div>
 
 </template>
@@ -32,6 +35,7 @@ export default {
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
+            isLoading: false,
         }
     },
     methods: {
@@ -43,9 +47,11 @@ export default {
             console.log(data);
         },
         async getUsers() {
+            this.isLoading = true;
             try {
                 const data = await this.getUsersData();
                 this.items = data;
+                this.isLoading = false;
             }
             catch (error) {
                 console.log(error);

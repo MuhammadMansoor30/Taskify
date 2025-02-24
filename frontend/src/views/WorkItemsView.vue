@@ -2,9 +2,12 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table title="Taskify Work Items List" tableTitle="Work Items" :fields="fields" :items="items" :editData="editData"
-            :deleteData="deleteData" />
+        <data-table v-if="!isLoading" title="Taskify Work Items List" tableTitle="Work Items" :fields="fields" :items="items"
+            :editData="editData" :deleteData="deleteData" />
 
+        <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
+            <b-spinner></b-spinner>
+        </div>
     </div>
 
 </template>
@@ -33,6 +36,7 @@ export default {
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
+            isLoading: false,
         }
     },
     methods: {
@@ -44,8 +48,9 @@ export default {
             console.log(data);
         },
         async getWorkItems() {
+            this.isLoading = true;
             try {
-                const data = await this.getWorkItemsData({is_approved: true});   // Fetch only approved Work Items
+                const data = await this.getWorkItemsData({ is_approved: true });   // Fetch only approved Work Items
                 await Promise.all(data.map(async val => {
                     const fileName = val.file.split('/')[2];
                     const taskName = await this.getTaskName(val.task);
@@ -53,6 +58,7 @@ export default {
                     val.task = taskName['title'];
                 }));
                 this.items = data;
+                this.isLoading = false;
             }
             catch (error) {
                 console.log(error);
