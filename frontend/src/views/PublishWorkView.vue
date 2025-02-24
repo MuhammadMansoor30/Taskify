@@ -12,7 +12,7 @@
                     <h4 class="mb-0 rounded-5" style="background-color: #800020; color: #ececec; padding: 10px;">
                         Add New Work Item
                     </h4>
-                    <div class="mt-3 text-start">
+                    <div v-if="!isLoading" class="mt-3 text-start">
                         <b-form @submit.prevent="submitForm">
                             <b-form-group class="mb-2 fs-4" label="Work Item Name" label-for="textField"
                                 :invalid="name.length > 50">
@@ -50,7 +50,8 @@
                                 <b-form-select id="selectField2" class="form-select fs-5" v-model="selectedTask"
                                     :class="{ 'is-invalid': isTaskSelected }" required>
                                     <option value="">Please Select</option>
-                                    <option v-for="(task, index) in tasks" :key="index" :value="task.id">{{ task.title }}
+                                    <option v-for="(task, index) in tasks" :key="index" :value="task.id">{{ task.title
+                                    }}
                                     </option>
                                 </b-form-select>
                             </b-form-group>
@@ -62,6 +63,9 @@
                                     @click.prevent="submitForm">Submit</button>
                             </div>
                         </b-form>
+                    </div>
+                    <div v-if="isLoading" class="d-flex justify-content-center align-items-center my-3 w-100">
+                        <b-spinner></b-spinner>
                     </div>
                 </div>
             </div>
@@ -85,6 +89,7 @@ export default {
     },
     data() {
         return {
+            isLoading: false,
             name: '',
             file: '',
             status: '',
@@ -123,6 +128,7 @@ export default {
         async submitForm() {
             try {
                 if (this.selectedTask && this.file) {
+                    this.isLoading = true;
                     this.isFileSelected = false;
                     this.isTaskSelected = false;
                     const payload = {
@@ -133,7 +139,8 @@ export default {
                         task: this.selectedTask
                     };
                     const data = await this.addWorkItem(payload);
-                    if(data){
+                    if (data) {
+                        this.isLoading = false;
                         Swal.fire({
                             icon: 'success',
                             title: "Work Item Added Successfully!",
@@ -144,7 +151,7 @@ export default {
                             this.resetForm();
                         });
                     }
-                    else{
+                    else {
                         Swal.fire({
                             icon: 'error',
                             title: "Some Error Occurred",
@@ -158,7 +165,7 @@ export default {
                     this.isTaskSelected = true;
                 }
             }
-            catch (error){
+            catch (error) {
                 console.log(error);
             }
         },

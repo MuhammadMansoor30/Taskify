@@ -14,6 +14,7 @@ export default createStore({
     workItems: [],
     roles: [],
     users: [],
+    permissions: [],
   },
 
   getters: {
@@ -54,6 +55,9 @@ export default createStore({
     },
     getUsers: state => {
       return state.users;
+    },
+    getPermissions: state => {
+      return state.permissions;
     },
   },
 
@@ -149,6 +153,10 @@ export default createStore({
 
     setUsers: (state, data) => {
       state.users = data;
+    },
+
+    setPermissions: (state, data) => {
+      state.permissions = data;
     }
   },
 
@@ -169,15 +177,15 @@ export default createStore({
     },
 
     logout: async (context, data) => {
-      try{
+      try {
         const res = await loginApi.post('logout/');
-        if(res.status === 200){
+        if (res.status === 200) {
           context.commit('logout');
           context.commit('removeUserData');
           return res.data;
         }
       }
-      catch(error){
+      catch (error) {
         console.log(error);
       }
     },
@@ -293,7 +301,7 @@ export default createStore({
 
     getWorkItemsData: async (context, payload) => {
       try {
-        const {is_approved} = payload;
+        const { is_approved } = payload;
         const res = await fileApi.get(`workItems/?is_approved=${is_approved}`);
         if (res.status === 200) {
           context.commit('setWorkItems', res.data);
@@ -320,27 +328,78 @@ export default createStore({
     },
 
     getUsersData: async (context) => {
-      try{
+      try {
         const res = await backendApi.get('users/');
-        if(res.status === 200){
+        if (res.status === 200) {
           context.commit('setUsers', res.data);
           return res.data;
         }
       }
-      catch(error){
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getPermissionsData: async (context) => {
+      try{
+        const res = await backendApi.get('permissions/');
+        if(res.status === 200){
+          context.commit('setPermissions', res.data);
+          return res.data;
+        }
+      }
+      catch (error){
         console.log(error);
       }
     },
 
     addWorkItem: async (context, payload) => {
-      try{
+      try {
         const res = await fileApi.post('workItems/', payload);
-        if(res.status === 201){
+        if (res.status === 201) {
           console.log("Backend Res", res.data);
           return res.data;
         }
       }
-      catch(error){
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    addManager: async (context, payload) => {
+      try {
+        const res = await backendApi.post('managers/', payload);
+        if (res.status === 201) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    deleteManager: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.delete(`managers/${id}`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    addRole: async (context, payload) => {
+      try{
+        const res = await backendApi.post('roles/', payload);
+        if(res.status === 201){
+          return res.data;
+        }
+      }
+      catch (error){
         console.log(error);
       }
     },
