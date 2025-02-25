@@ -232,9 +232,15 @@ export default createStore({
       }
     },
 
-    getTeamsData: async (context) => {
+    getTeamsData: async (context, manager_id) => {
+      let res;
       try {
-        const res = await backendApi.get('teams/');
+        if (manager_id) {
+          res = await backendApi.get(`teams/?manager=${manager_id}`);
+        }
+        else {
+          res = await backendApi.get(`teams/`);
+        }
         if (res.status === 200) {
           context.commit('setTeams', res.data);
           return res.data;
@@ -341,14 +347,14 @@ export default createStore({
     },
 
     getPermissionsData: async (context) => {
-      try{
+      try {
         const res = await backendApi.get('permissions/');
-        if(res.status === 200){
+        if (res.status === 200) {
           context.commit('setPermissions', res.data);
           return res.data;
         }
       }
-      catch (error){
+      catch (error) {
         console.log(error);
       }
     },
@@ -363,6 +369,18 @@ export default createStore({
       }
       catch (error) {
         console.log(error);
+      }
+    },
+
+    approveWorkItem: async (context, id) => {
+      try {
+        const res = await backendApi.put(`workItems/${id}/approve/`);
+        if (res.status === 200) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        return error;
       }
     },
 
@@ -381,7 +399,7 @@ export default createStore({
     deleteManager: async (context, id) => {
       try {
         if (id) {
-          const res = await backendApi.delete(`managers/${id}`);
+          const res = await backendApi.delete(`managers/${id}/delete/`);
           if (res.status === 200) {
             return res.data;
           }
@@ -393,14 +411,118 @@ export default createStore({
     },
 
     addRole: async (context, payload) => {
-      try{
+      try {
         const res = await backendApi.post('roles/', payload);
-        if(res.status === 201){
+        if (res.status === 201) {
           return res.data;
         }
       }
-      catch (error){
+      catch (error) {
         console.log(error);
+      }
+    },
+
+    addTeam: async (context, payload) => {
+      try {
+        const res = await backendApi.post('teams/', payload);
+        if (res.status === 201) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    deleteTeam: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.delete(`teams/${id}/delete/`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    addDeveloper: async (context, payload) => {
+      try {
+        const res = await backendApi.post('developers/', payload);
+        if (res.status === 201) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    deleteDeveloper: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.delete(`developers/${id}/delete`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    addTask: async (context, payload) => {
+      try {
+        const res = await backendApi.post('tasks/', payload);
+        if (res.status === 201) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    deleteTask: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.delete(`tasks/${id}/delete`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    addUser: async (context, payload) => {
+      try {
+        const res = await backendApi.post('users/', payload);
+        if (res.status === 201) {
+          return res.data;
+        }
+      }
+      catch (error) {
+        return error;
+      }
+    },
+
+    deleteUser: async (context, id) => {
+      try {
+        if (id) {
+          const res = await backendApi.delete(`users/${id}/delete`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        return error;
       }
     },
 

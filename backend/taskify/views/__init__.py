@@ -2,6 +2,7 @@ from .login_view import LoginView
 from .login_view import CurrentUserView
 from .logout_view import LogoutView
 from .user_list_create_view import UserListCreateView
+from .user_update_destroy_view import UserUpdateDestroyView
 from .permission_list_view import PermissionListView
 from .role_list_create_view import RoleListCreateView
 from .manager_list_create_view import ManagerListCreateView

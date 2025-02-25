@@ -2,8 +2,11 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table v-if="!isLoading" title="Taskify Tasks List" tableTitle="Tasks" :fields="fields" :items="items" :editData="editData"
-            :deleteData="deleteData" hasCreatePermission="task_add" />
+        <data-table v-if="!isLoading" title="Taskify Tasks List" tableTitle="Tasks" :fields="fields" :items="items"
+            :editData="editData" :deleteData="deleteData" hasCreatePermission="task_add"
+            v-model:showModal="showModal" />
+
+        <tasks-create-edit-modal v-model:showModal="showModal" />
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -14,13 +17,16 @@
 <script>
 import Sidebar from '@/components/Sidebar.vue';
 import DataTable from '@/components/DataTable.vue';
+import TasksCreateEditModal from '@/components/TasksCreateEditModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 import dayjs from 'dayjs';
+import Swal from 'sweetalert2';
 
 export default {
     components: {
         Sidebar,
-        DataTable
+        DataTable,
+        TasksCreateEditModal
     },
     async mounted() {
         this.getTasks();
@@ -38,16 +44,41 @@ export default {
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
+            showModal: false,
             isLoading: false,
         }
     },
     methods: {
-        ...mapActions(['getTasksData', 'getTeamById']),
+        ...mapActions(['getTasksData', 'getTeamById', 'deleteTask']),
         editData(data) {
             console.log(data);
         },
-        deleteData(data) {
-            console.log(data);
+        async deleteData(data) {
+            console.log(data.id);
+            try {
+                const result = await this.deleteTask(data.id);
+                if (result) {
+                    Swal.fire({
+                        icon: "success",
+                        title: result.Msg,
+                        timer: 1500,
+                        showCancelButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Could not delete Task some error occurred.",
+                        timer: 1500,
+                        showCancelButton: false,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
         },
         setCellVariants(data) {
             const priority = data.priority;

@@ -2,8 +2,8 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table v-if="!isLoading" title="Taskify Approve Work Items List" tableTitle="Work Items For Approval" :fields="fields"
-            :items="items" :approve-work="approveWork" hasApprovalPermission="approve_work" />
+        <data-table v-if="!isLoading" title="Taskify Approve Work Items List" tableTitle="Work Items For Approval"
+            :fields="fields" :items="items" :approve-work="approveWork" hasApprovalPermission="approve_work" />
 
         <!-- We can pass in props that are rrequired and dont have to define all and only those will have values which are defined else will be null same as in React -->
 
@@ -17,6 +17,7 @@
 import Sidebar from '@/components/Sidebar.vue';
 import DataTable from '@/components/DataTable.vue';
 import { mapActions, mapGetters } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
     components: {
@@ -42,9 +43,30 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getWorkItemsData', 'getTaskById']),
+        ...mapActions(['getWorkItemsData', 'getTaskById', 'approveWorkItem']),
         approveWork(data) {
-            console.log(data);
+            Swal.fire({
+                icon: 'question',
+                text: "Are You Sure to approve this Work Item!",
+                confirmButtonText: "Yes! Approve it",
+                confirmButtonColor: '#800020',
+                showCancelButton: true,
+                showConfirmButton: true,
+            }).then(async result => {
+                if (result.value) {
+                    const val = await this.approveWorkItem(data.id);
+                    if (val) {
+                        Swal.fire({
+                            icon: 'success',
+                            text: val.Msg,
+                            showCancelButton: false,
+                            timer: 1000
+                        }).then(() => {
+                            this.$router.push('workItems'); 
+                        })
+                    }
+                }
+            });
         },
         async getWorkItems() {
             this.isLoading = true;

@@ -5,14 +5,17 @@ from rest_framework import status
 from taskify.models import Team
 from taskify.serializers import TeamSerializer
 from taskify.decorator import permission_required
+from taskify.filters import TeamFilters
 
 class TeamListCreateView(APIView):
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
+    filterset_class = TeamFilters
 
     @permission_required(['teams_get'])
     def get(self, *args, **kwargs):
         teams = Team.objects.all()
+        teams = TeamFilters(self.request.GET, queryset=teams).qs    # Applying filters based on query paams sent in request or using Admin Site
         team_ser = self.serializer_class(teams, many=True)
         return Response(team_ser.data, status=status.HTTP_200_OK)
     
