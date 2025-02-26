@@ -4,7 +4,7 @@ from taskify.models import Developer
 class DeveloperSerializer(serializers.ModelSerializer):
     class Meta:
         model = Developer
-        fields = ['id', 'full_name', 'experience', 'skill_set', 'manager', 'team']
+        fields = ['id', 'full_name', 'experience', 'skill_set', 'manager', 'team', 'user']
     
     def create(self, validated_data):
         user = self.context.get('user')

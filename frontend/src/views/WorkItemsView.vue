@@ -2,8 +2,10 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table v-if="!isLoading" title="Taskify Work Items List" tableTitle="Work Items" :fields="fields" :items="items"
-            :editData="editData" :deleteData="deleteData" />
+        <data-table v-if="!isLoading" title="Taskify Work Items List" tableTitle="Work Items" :fields="fields"
+            :items="items" :editData="editData" :deleteData="deleteData" />
+
+        <work-item-edit-modal v-model:showModal="showModal" :data="workItemData"/>
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -14,12 +16,15 @@
 <script>
 import Sidebar from '@/components/Sidebar.vue';
 import DataTable from '@/components/DataTable.vue';
+import WorkItemEditModal from '@/components/WorkItemEditModal.vue';
 import { mapActions, mapGetters } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
     components: {
         Sidebar,
-        DataTable
+        DataTable,
+        WorkItemEditModal,
     },
     async mounted() {
         this.getWorkItems();
@@ -36,15 +41,43 @@ export default {
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
+            showModal: false,
+            workItemData: null,
             isLoading: false,
         }
     },
     methods: {
-        ...mapActions(['getWorkItemsData', 'getTaskById']),
-        editData(data) {
-            console.log(data);
+        ...mapActions(['getWorkItemsData', 'getTaskById', 'deleteWorkIten', 'getWorkItemById']),
+        async editData(data) {
+            const dta = await this.getWorkItemById(data.id);
+            this.workItemData = dta;
+            this.showModal = true;
         },
-        deleteData(data) {
+        async deleteData(data) {
+            try {
+                const result = await this.deleteWorkIten(data.id);
+                if (result) {
+                    Swal.fire({
+                        icon: "success",
+                        title: result.Msg,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Could not delete Work Item some error occurred.",
+                        timer: 1000,
+                        showConfirmButton: false,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
             console.log(data);
         },
         async getWorkItems() {

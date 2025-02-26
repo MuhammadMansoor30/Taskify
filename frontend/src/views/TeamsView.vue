@@ -6,7 +6,7 @@
             :editData="editData" :deleteData="deleteData" hasCreatePermission="team_add"
             v-model:showModal="showModal" />
 
-        <team-create-edit-modal v-model:showModal="showModal" />
+        <team-create-edit-modal v-model:showModal="showModal" :data="teamData" v-model:editBtn="editBtn" />
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -42,13 +42,18 @@ export default {
             ],
             items: null,
             showModal: false,
+            editBtn: false,
+            teamData: null,
             isLoading: false,
         }
     },
     methods: {
-        ...mapActions(['getTeamsData', 'getManagerById', 'deleteTeam']),
-        editData(data) {
-            console.log(data);
+        ...mapActions(['getTeamsData', 'getManagerById', 'deleteTeam', 'getTeamById']),
+        async editData(data) {
+            const team = await this.getTeamById(data.id);    // Fecthing team data again to get manager id as it has been replaced with name here.
+            this.teamData = team;
+            this.editBtn = true;
+            this.showModal = true;
         },
         async deleteData(data) {
             console.log("Deleting: ", data, " id ", data.id);

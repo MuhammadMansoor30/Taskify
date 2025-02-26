@@ -69,8 +69,8 @@
 
                 <b-button-toolbar class="mt-3 justify-content-end">
                     <button class="btn fs-5 btn-danger clr-1 rounded-5" @click="resetForm">Reset</button>
-                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4"
-                        @click.prevent="submitForm">Submit</button>
+                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4" @click.prevent="submitForm">{{ editBtn ?
+                        "Edit" : "Add" }}</button>
                 </b-button-toolbar>
             </form>
             <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
@@ -85,7 +85,7 @@ import Swal from 'sweetalert2';
 import { mapActions } from 'vuex';
 
 export default {
-    props: ['showModal'],
+    props: ['showModal', 'data', 'editBtn'],
     data() {
         return {
             form: {
@@ -103,23 +103,33 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['addManager']),
+        ...mapActions(['addManager', 'editManager', 'editUser']),
         async submitForm() {
-            if (this.form.username && this.form.full_name && this.form.email && this.form.password && this.form.cnic
-                && this.form.mobile_no && this.form.experience && this.form.department) {
-                this.isLoading = true;
-                await this.addNewManager(this.form);
-                this.isLoading = false;
+            if (!this.editBtn) {
+                if (this.form.username && this.form.full_name && this.form.email && this.form.password && this.form.cnic
+                    && this.form.mobile_no && this.form.experience && this.form.department) {
+                    this.isLoading = true;
+                    await this.addNewManager(this.form);
+                    this.isLoading = false;
+                }
+                else {
+                    this.isLoading = false;
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1000,
+                        title: "Please Fill out all the required fields",
+                        showConfirmButton: false,
+                    });
+                }
             }
             else {
+                this.isLoading = true;
+                const userId = this.data.user.id;
+                const managerId = this.data.data.id;
+                await this.updateManager(this.form, userId, managerId);
                 this.isLoading = false;
-                Swal.fire({
-                    icon: 'error',
-                    timer: 1000,
-                    title: "Please Fill out all the required fields",
-                    showConfirmButton: false,
-                });
             }
+
         },
         resetForm() {
             this.form.username = '';
@@ -130,6 +140,7 @@ export default {
             this.form.mobile_no = '';
             this.form.experience = '';
             this.form.department = '';
+            this.$emit('update:editBtn', false);
             this.$emit('update:showModal', false);
         },
         async addNewManager(formData) {
@@ -142,6 +153,7 @@ export default {
                         title: 'Manager Added Successfully',
                         showConfirmButton: false,
                     }).then(() => {
+                        this.$emit('update:editBtn', false);
                         this.$emit('update:showModal', false); // Same as done in Table Component.
                         window.location.reload();
                         this.resetForm();
@@ -160,9 +172,69 @@ export default {
                 console.log(error);
             }
         },
+        async updateManager(formData, userId, managerId) {
+            try {
+                const userData = {
+                    id: userId,
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password,
+                    cnic: formData.cnic,
+                    mobile_no: formData.mobile_no,
+                };
+                const managerData = {
+                    id: managerId,
+                    full_name: formData.full_name,
+                    experience: formData.experience,
+                    department: formData.department,
+                    user: userId
+                };
+
+                const user = await this.editUser(userData);
+                const manager = await this.editManager(managerData);
+                if (user || manager) {
+                    Swal.fire({
+                        icon: 'success',
+                        timer: 1500,
+                        title: 'Manager Updated Successfully',
+                        showConfirmButton: false,
+                    }).then(() => {
+                        this.$emit('update:editBtn', false);
+                        this.$emit('update:showModal', false); 
+                        window.location.reload();
+                        this.resetForm();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1500,
+                        title: "Could Not update manager some error occurred",
+                        showConfirmButton: false,
+                    });
+                }
+            }
+            catch (error) {
+
+            }
+        },
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+    },
+    watch: {
+        // Watching for data prop for changes so that they are rendered asap.
+        data(newData) {
+            if (newData) {
+                this.form.username = newData.user.username || '';
+                this.form.full_name = newData.data.full_name || '';
+                this.form.email = newData.user.email || '';
+                this.form.cnic = newData.user.cnic || '';
+                this.form.mobile_no = newData.user.mobile_no || '';
+                this.form.experience = newData.data.experience || '';
+                this.form.department = newData.data.department || '';
+            }
+        }
     }
 };
 </script>

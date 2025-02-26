@@ -14,6 +14,7 @@ class Task(models.Model):
     priority = models.CharField(choices=SET_PRIORITY, null=False)
     assigned_to = models.ForeignKey("User", related_name="tasks", on_delete=models.SET_NULL, null=True)
     created_by = models.ForeignKey("User", related_name="created_tasks", on_delete=models.SET_NULL, null=True)
+    added_at = models.TimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.assigned_to and self.team:

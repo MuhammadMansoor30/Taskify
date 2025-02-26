@@ -2,10 +2,11 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table v-if="!isLoading" title="Taskify Developers List" tableTitle="Developers" :fields="fields" :items="items"
-            :editData="editData" :deleteData="deleteData" hasCreatePermission="developer_add" v-model:showModal="showModal" />
+        <data-table v-if="!isLoading" title="Taskify Developers List" tableTitle="Developers" :fields="fields"
+            :items="items" :editData="editData" :deleteData="deleteData" hasCreatePermission="developer_add"
+            v-model:showModal="showModal" />
 
-        <developers-create-edit-modal v-model:showModal="showModal"/>
+        <developers-create-edit-modal v-model:showModal="showModal" :data="devData" v-model:editBtn="editBtn" />
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -42,19 +43,24 @@ export default {
             ],
             items: null,
             showModal: false,
+            editBtn: false,
+            devData: null,
             isLoading: false,
         }
     },
     methods: {
-        ...mapActions(['getDevelopersData', 'getManagerById', 'getTeamById', 'deleteDeveloper']),
-        editData(data) {
-            console.log(data);
-            // this.showModal = true;
+        ...mapActions(['getDevelopersData', 'getManagerById', 'getDeveloperById', 'getTeamById', 'deleteDeveloper', 'getUserById']),
+        async editData(data) {
+            const user = await this.getUserById(data.user);
+            const developer = await this.getDeveloperById(data.id);
+            this.devData = { developer, user };
+            this.editBtn = true;
+            this.showModal = true;
         },
         async deleteData(data) {
-            try{
+            try {
                 const result = await this.deleteDeveloper(data.id);
-                if(result){
+                if (result) {
                     Swal.fire({
                         icon: 'success',
                         timer: 1500,
@@ -65,7 +71,7 @@ export default {
                         location.reload();
                     });
                 }
-                else{
+                else {
                     Swal.fire({
                         icon: 'error',
                         title: "Could not delete developer some error occurred",
@@ -74,7 +80,7 @@ export default {
                     });
                 }
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         },

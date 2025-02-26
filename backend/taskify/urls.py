@@ -6,6 +6,7 @@ urlpatterns = [
     path('currentuser/', view=views.CurrentUserView.as_view()),
     path('logout/', view=views.LogoutView.as_view()),
     path('users/', view=views.UserListCreateView.as_view()),
+    path('users/<int:pk>/', view=views.UserUpdateDestroyView.as_view()),
     path('users/<int:pk>/update/', view=views.UserUpdateDestroyView.as_view()),
     path('users/<int:pk>/delete/', view=views.UserUpdateDestroyView.as_view()),
     path('permissions/', view=views.PermissionListView.as_view()),

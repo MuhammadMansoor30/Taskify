@@ -2,10 +2,10 @@
   <div class="home d-flex flex-row">
     <sidebar class="col-12 col-lg-2" />
 
-    <data-table v-if="!isLoading" title="Taskify Managers List" tableTitle="Managers" :fields="fields" :items="items" :editData="editData"
-      :deleteData="deleteData" hasCreatePermission="user_create" v-model:showModal="showModal" />
+    <data-table v-if="!isLoading" title="Taskify Managers List" tableTitle="Managers" :fields="fields" :items="items"
+      :editData="editData" :deleteData="deleteData" hasCreatePermission="user_create" v-model:showModal="showModal" />
 
-    <manager-create-edit-modal v-model:showModal="showModal" />
+    <manager-create-edit-modal v-model:showModal="showModal" :data="managerData" v-model:editBtn="editBtn"  />
 
     <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
       <b-spinner></b-spinner>
@@ -43,6 +43,8 @@ export default {
       ],
       items: null,
       showModal: false,
+      editBtn: false,
+      managerData: null,
       isLoading: false,
     }
   },
@@ -61,9 +63,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getManagersData', 'deleteManager']),
-    editData(data) {
-      console.log("Edited Obj Id: ", data, " and ", data.id);
+    ...mapActions(['getManagersData', 'deleteManager', 'getUserById']),
+    async editData(data) {
+      const user = await this.getUserById(data.user);
+      this.managerData = {data, user};
+      this.editBtn = true;
+      this.showModal = true;
     },
     async deleteData(data) {
       try {

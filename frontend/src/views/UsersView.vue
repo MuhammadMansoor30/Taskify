@@ -6,7 +6,7 @@
             :editData="editData" :deleteData="deleteData" has-create-permission="user_create"
             v-model:showModal="showModal" />
 
-        <users-create-edit-modal v-model:showModal="showModal" />
+        <users-create-edit-modal v-model:showModal="showModal" :data="userData" v-model:editBtn="editBtn"/>
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -42,13 +42,17 @@ export default {
             ],
             items: null,
             showModal: false,
+            editBtn: false,
+            userData: null,
             isLoading: false,
         }
     },
     methods: {
         ...mapActions(['getUsersData', 'deleteUser']),
-        editData(data) {
-            console.log(data);
+        async editData(data) {
+            this.userData = data;
+            this.editBtn = true;
+            this.showModal = true;
         },
         async deleteData(data) {
             console.log(data.id);
@@ -58,8 +62,8 @@ export default {
                     Swal.fire({
                         icon: "success",
                         title: result.Msg,
-                        timer: 1500,
-                        showCancelButton: false,
+                        timer: 1000,
+                        showConfirmButton: false,
                     }).then(() => {
                         window.location.reload();
                     });
@@ -68,8 +72,8 @@ export default {
                     Swal.fire({
                         icon: "error",
                         title: "Could not delete User some error occurred.",
-                        timer: 1500,
-                        showCancelButton: false,
+                        timer: 1000,
+                        showConfirmButton: false,
                     });
                 }
             }

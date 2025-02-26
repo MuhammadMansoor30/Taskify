@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from taskify.models import User
+from taskify.models import User, Role
 from taskify.serializers import UserSerializer
 from taskify.decorator import permission_required
 
@@ -17,7 +17,7 @@ class UserUpdateDestroyView(APIView):
         except User.DoesNotExist:
             raise Http404({"Msg": "Team with the provided id does not exist"})
     
-    @permission_required(['team_get_id'])
+    # @permission_required(['team_get_id'])
     def get(self, request, pk):
         user = self.get_user_by_id(pk=pk)
         user_ser = self.serializer_class(user)
@@ -26,12 +26,18 @@ class UserUpdateDestroyView(APIView):
     # @permission_required(["user_edit"])
     def put(self, request, pk):
         user = self.get_user_by_id(pk=pk)
+        roles = request.data.get('roles')
+
+        for role_name in roles:
+            role = Role.objects.get(code_name=role_name)
+            user.roles.clear()
+            user.roles.add(role)
         
         user_ser = self.serializer_class(user, data=request.data, partial=True)
 
         if user_ser.is_valid():
             user_ser.save()
-            return Response(user_ser.data, status=status.HTTP_201_CREATED)
+            return Response(user_ser.data, status=status.HTTP_200_OK)
         else:
             print(user_ser.errors)
             return Response({"Msg": "Could not update User an error occurred!"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
