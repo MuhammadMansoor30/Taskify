@@ -10,8 +10,10 @@
                 </b-form-group>
 
                 <b-form-group label="Description" label-for="description" class="fs-4">
-                    <b-form-textarea id="description" v-model="form.description" required placeholder="Enter task description ....."
-                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="3" no-resize=""></b-form-textarea>
+                    <b-form-textarea id="description" v-model="form.description" required
+                        placeholder="Enter task description ....."
+                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="3"
+                        no-resize=""></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group label="Select Team" label-for="team" class="fs-4">
@@ -41,14 +43,15 @@
                 <b-form-group label="Assign To" label-for="assignto" class="fs-4">
                     <b-form-select id="assignto" v-model="form.assigned_to" required class="form-select fs-5">
                         <option value="">Please Select</option>
-                        <option v-for="(user, index) in allUsers" :key="index" :value="user.id">{{user.username}}</option>
+                        <option v-for="(user, index) in allUsers" :key="index" :value="user.id">{{ user.username }}
+                        </option>
                     </b-form-select>
                 </b-form-group>
 
                 <b-button-toolbar class="mt-3 justify-content-end">
                     <button class="btn fs-5 btn-danger clr-1 rounded-5" @click="resetForm">Reset</button>
-                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4"
-                        @click.prevent="submitForm">Submit</button>
+                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4" @click.prevent="submitForm">{{ editBtn ?
+                        "Edit" : "Add" }}</button>
                 </b-button-toolbar>
             </form>
             <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
@@ -67,7 +70,7 @@ export default {
         this.getAllUsers();
         this.getAllTeams();
     },
-    props: ['showModal'],
+    props: ['showModal', 'data', 'editBtn'],
     data() {
         return {
             form: {
@@ -85,21 +88,28 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['addTask', 'getTeamsData', 'getUsersData']),
+        ...mapActions(['addTask', 'getTeamsData', 'getUsersData', 'editTask']),
         async submitForm() {
-            if (this.form.title && this.form.description && this.form.team && this.form.priority && this.form.assigned_to) {
-                this.isLoading = true;
-                await this.addNewTask(this.form);
-                this.isLoading = false;
+            if (!this.editBtn) {
+                if (this.form.title && this.form.description && this.form.team && this.form.priority && this.form.assigned_to) {
+                    this.isLoading = true;
+                    await this.addNewTask(this.form);
+                    this.isLoading = false;
+                }
+                else {
+                    this.isLoading = false;
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1000,
+                        title: "Please Fill out all the required fields",
+                        showConfirmButton: false,
+                    });
+                }
             }
             else {
+                this.isLoading = true;
+                await this.updateTask(this.form, this.data.id);
                 this.isLoading = false;
-                Swal.fire({
-                    icon: 'error',
-                    timer: 1000,
-                    title: "Please Fill out all the required fields",
-                    showConfirmButton: false,
-                });
             }
         },
         resetForm() {
@@ -109,6 +119,7 @@ export default {
             this.form.is_completed = '';
             this.form.priority = '';
             this.form.assigned_to = '';
+            this.$emit('update:editBtn', false);
             this.$emit('update:showModal', false);
         },
         async addNewTask(formData) {
@@ -121,6 +132,7 @@ export default {
                         title: 'Task Added Successfully',
                         showConfirmButton: false,
                     }).then(() => {
+                        this.$emit('update:editBtn', false);
                         this.$emit('update:showModal', false);
                         window.location.reload();
                         this.resetForm();
@@ -160,9 +172,50 @@ export default {
                 console.log(error);
             }
         },
+        async updateTask(formData, id) {
+            try {
+                const finalData = { id, ...formData };
+                const result = await this.editTask(finalData);
+                if (result) {
+                    Swal.fire({
+                        icon: 'success',
+                        timer: 1500,
+                        title: 'Task Updated Successfully',
+                        showConfirmButton: false,
+                    }).then(() => {
+                        this.$emit('update:editBtn', false);
+                        this.$emit('update:showModal', false);
+                        window.location.reload();
+                        this.resetForm();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1500,
+                        title: "Could Not update task some error occurred",
+                        showConfirmButton: false,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+    },
+    watch: {
+        data(newData) {
+            if (newData) {
+                this.form.title = newData.title || '';
+                this.form.team = newData.team || '';
+                this.form.is_completed = newData.is_completed ? 'True' : 'False';
+                this.form.priority = newData.priority || '';
+                this.form.assigned_to = newData.assigned_to || '';
+            }
+        }
     }
 };
 </script>

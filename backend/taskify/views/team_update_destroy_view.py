@@ -31,7 +31,7 @@ class TeamUpdateDestroyView(APIView):
 
         if team_ser.is_valid():
             team_ser.save()
-            return Response(team_ser.data, status=status.HTTP_201_CREATED)
+            return Response(team_ser.data, status=status.HTTP_200_OK)
         else:
             print(team_ser.errors)
             return Response({"Msg": "Could not update Team an error occurred!"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)

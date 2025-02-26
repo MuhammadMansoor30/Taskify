@@ -278,6 +278,20 @@ export default createStore({
       }
     },
 
+    getDeveloperById: async (context, id) => {
+      try {
+        if(id){
+          const res = await backendApi.get(`developers/${id}/`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
     getTasksData: async (context) => {
       try {
         const res = await backendApi.get('tasks/');
@@ -320,6 +334,20 @@ export default createStore({
       }
     },
 
+    getWorkItemById: async (context, id) => {
+      try {
+        if(id){
+          const res = await fileApi.get(`workItems/${id}/`);
+          if (res.status === 200) {
+            return res.data;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
     getRolesData: async (context) => {
       try {
         const res = await backendApi.get('roles/');
@@ -339,6 +367,20 @@ export default createStore({
         if (res.status === 200) {
           context.commit('setUsers', res.data);
           return res.data;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+    },
+
+    getUserById: async (context, id) => {
+      try {
+        if(id){
+          const res = await backendApi.get(`users/${id}/`);
+          if (res.status === 200) {
+            return res.data;
+          }
         }
       }
       catch (error) {
@@ -372,6 +414,31 @@ export default createStore({
       }
     },
 
+    editWorkItem: async (context, payload) => {
+      const {id} = payload;
+      try{
+        const res = await fileApi.put(`workItems/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch(error){
+        return error;
+      }
+    },
+
+    deleteWorkIten: async (context, id) => {
+      try{
+        const res = await backendApi.delete(`workItems/${id}/delete/`);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
+        return error;
+      }
+    },
+
     approveWorkItem: async (context, id) => {
       try {
         const res = await backendApi.put(`workItems/${id}/approve/`);
@@ -393,6 +460,21 @@ export default createStore({
       }
       catch (error) {
         console.log(error);
+      }
+    },
+
+    editManager: async (context, payload) => {
+      const {id} = payload;
+      console.log("Here Man", payload, id);
+      try{
+        const res = await backendApi.put(`managers/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
+        console.log(error);
+        return error;
       }
     },
 
@@ -434,6 +516,19 @@ export default createStore({
       }
     },
 
+    editTeam: async (context, payload) => {
+      const {id} = payload;
+      try{
+        const res = await backendApi.put(`teams/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
+        return error;
+      }
+    },
+
     deleteTeam: async (context, id) => {
       try {
         if (id) {
@@ -456,6 +551,19 @@ export default createStore({
         }
       }
       catch (error) {
+        return error;
+      }
+    },
+
+    editDeveloper: async (context, payload) => {
+      const {id} = payload;
+      try{
+        const res = await backendApi.put(`developers/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
         return error;
       }
     },
@@ -486,6 +594,19 @@ export default createStore({
       }
     },
 
+    editTask: async (context, payload) => {
+      const {id} = payload;
+      try{
+        const res = await backendApi.put(`tasks/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
+        return error
+      }
+    },
+
     deleteTask: async (context, id) => {
       try {
         if (id) {
@@ -508,6 +629,19 @@ export default createStore({
         }
       }
       catch (error) {
+        return error;
+      }
+    },
+
+    editUser: async (context, payload) => {
+      const {id} = payload;
+      try{
+        const res = await backendApi.put(`users/${id}/update/`, payload);
+        if(res.status === 200){
+          return res.data;
+        }
+      }
+      catch (error){
         return error;
       }
     },

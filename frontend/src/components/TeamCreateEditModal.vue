@@ -17,24 +17,24 @@
                 </b-form-group>
 
                 <b-form-group label="Project Name" label-for="projectname" class="fs-4">
-                    <b-form-input id="projectname" v-model="form.project_name" required
-                        placeholder="Enter project name"
-                        :class="{ 'is-invalid': form.project_name.length > 30, 'fs-5': true }" ></b-form-input>
+                    <b-form-input id="projectname" v-model="form.project_name" required placeholder="Enter project name"
+                        :class="{ 'is-invalid': form.project_name.length > 30, 'fs-5': true }"></b-form-input>
                 </b-form-group>
 
                 <b-form-group label="Select Manager" label-for="manager" class="fs-4">
                     <b-form-select id="manager" v-model="form.manager" class="form-select fs-5" required
                         :class="{ 'is-invalid': isManagerSelected }">
                         <option value="">Please Select</option>
-                        <option v-for="(val, index) in allManagers" :key="index" :value="val.id">{{ val.full_name }}</option>
+                        <option v-for="(val, index) in allManagers" :key="index" :value="val.id">{{ val.full_name }}
+                        </option>
                     </b-form-select>
                     <div v-if="isManagerSelected" class="invalid-feedback fs-5">Please select a Manager.</div>
                 </b-form-group>
 
                 <b-button-toolbar class="mt-3 justify-content-end">
                     <button class="btn fs-5 btn-danger clr-1 rounded-5" @click="resetForm">Reset</button>
-                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4"
-                        @click.prevent="submitForm">Submit</button>
+                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4" @click.prevent="submitForm">{{ editBtn ?
+                        "Edit" : "Add"}}</button>
                 </b-button-toolbar>
             </form>
             <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
@@ -52,7 +52,7 @@ export default {
     mounted() {
         this.getAllManagers();
     },
-    props: ['showModal'],
+    props: ['showModal', 'data', 'editBtn'],
     data() {
         return {
             form: {
@@ -67,23 +67,31 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['addTeam', 'getManagersData']),
+        ...mapActions(['addTeam', 'getManagersData', 'editTeam']),
         async submitForm() {
-            if (this.form.name && this.form.description && this.form.project_name && this.form.manager) {
-                this.isManagerSelected = false;
-                this.isLoading = true;
-                await this.addNewTeam(this.form);
-                this.isLoading = false;
+            if (!this.editBtn) {
+                if (this.form.name, this.form.description && this.form.project_name && this.form.manager) {
+                    this.isManagerSelected = false;
+                    this.isLoading = true;
+                    await this.addNewTeam(this.form);
+                    this.isLoading = false;
+                }
+                else {
+                    this.isManagerSelected = true;
+                    this.isLoading = false;
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1000,
+                        title: "Please Fill out all the required fields",
+                        showConfirmButton: false,
+                    });
+                }
             }
             else {
-                this.isManagerSelected = true;
+                this.isManagerSelected = false;
+                this.isLoading = true;
+                await this.updateTeam(this.form, this.data.id);
                 this.isLoading = false;
-                Swal.fire({
-                    icon: 'error',
-                    timer: 1000,
-                    title: "Please Fill out all the required fields",
-                    showConfirmButton: false,
-                });
             }
         },
         resetForm() {
@@ -91,6 +99,7 @@ export default {
             this.form.description = '';
             this.form.project_name = '';
             this.form.manager = '';
+            this.$emit('update:editBtn', false);
             this.$emit('update:showModal', false);
         },
         async addNewTeam(formData) {
@@ -103,6 +112,7 @@ export default {
                         title: 'Team Added Successfully',
                         showConfirmButton: false,
                     }).then(() => {
+                        this.$emit('update:editBtn', false);
                         this.$emit('update:showModal', false); // Same as done in Table Component.
                         window.location.reload();
                         this.resetForm();
@@ -129,6 +139,45 @@ export default {
             }
             catch (error) {
                 console.log(error);
+            }
+        },
+        async updateTeam(formData, id) {
+            const finaldata = { id, ...formData };
+            try {
+                const result = await this.editTeam(finaldata);
+                if (result) {
+                    Swal.fire({
+                        icon: 'success',
+                        timer: 1500,
+                        title: 'Team Updated Successfully',
+                        showConfirmButton: false,
+                    }).then(() => {
+                        this.$emit('update:editBtn', false);
+                        this.$emit('update:showModal', false); 
+                        window.location.reload();
+                        this.resetForm();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1500,
+                        title: "Could Not update team some error occurred",
+                        showConfirmButton: false,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+    },
+    watch: {
+        data(newData) {
+            if (newData) {
+                this.form.name = newData.name || '';
+                this.form.project_name = newData.project_name || '';
+                this.form.manager = newData.manager || '';
             }
         }
     }

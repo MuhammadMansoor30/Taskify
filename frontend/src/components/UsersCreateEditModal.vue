@@ -49,14 +49,15 @@
                 <b-form-group label="Add Roles" label-for="roles" class="fs-4">
                     <b-form-select id="roles" v-model="form.roles" class="form-select fs-5" required multiple>
                         <option :value="[]" class="fw-bold">Please Select One or Multiple</option>
-                        <option v-for="(role, index) in allRoles" :key="index" :value="role.id"> {{ role.name }}</option>
+                        <option v-for="(role, index) in allRoles" :key="index" :value="role.code_name"> {{ role.name }}
+                        </option>
                     </b-form-select>
                 </b-form-group>
 
                 <b-button-toolbar class="mt-3 justify-content-end">
                     <button class="btn fs-5 btn-danger clr-1 rounded-5" @click="resetForm">Reset</button>
-                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4"
-                        @click.prevent="submitForm">Submit</button>
+                    <button type="submit" class="btn clr fs-5 rounded-5 ms-4" @click.prevent="submitForm">{{ editBtn ?
+                        "Edit" : "Add" }}</button>
                 </b-button-toolbar>
             </form>
             <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
@@ -74,7 +75,7 @@ export default {
     mounted() {
         this.getAllRoles();
     },
-    props: ['showModal'],
+    props: ['showModal', 'data', 'editBtn'],
     data() {
         return {
             form: {
@@ -91,31 +92,38 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['addUser', 'getRolesData']),
+        ...mapActions(['addUser', 'getRolesData', 'editUser']),
         async submitForm() {
-            if (this.form.username && this.form.email && this.form.password && this.form.cnic && this.form.mobile_no && this.form.roles) {
-                this.isLoading = true;
-                await this.addNewUser(this.form);
-                this.isLoading = false;
+            if (!this.editBtn) {
+                if (this.form.username && this.form.email && this.form.password && this.form.cnic && this.form.mobile_no && this.form.roles) {
+                    this.isLoading = true;
+                    await this.addNewUser(this.form);
+                    this.isLoading = false;
+                }
+                else {
+                    this.isLoading = false;
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1000,
+                        title: "Please Fill out all the required fields",
+                        showConfirmButton: false,
+                    });
+                }
             }
             else {
+                this.isLoading = true;
+                await this.updateUser(this.form, this.data.id);
                 this.isLoading = false;
-                Swal.fire({
-                    icon: 'error',
-                    timer: 1000,
-                    title: "Please Fill out all the required fields",
-                    showConfirmButton: false,
-                });
             }
         },
         resetForm() {
             this.form.username = '';
-            this.form.full_name = '';
             this.form.email = '';
             this.form.password = '';
             this.form.cnic = '';
             this.form.mobile_no = '';
             this.form.roles = '';
+            this.$emit('update:editBtn', false);
             this.$emit('update:showModal', false);
         },
         async addNewUser(formData) {
@@ -128,6 +136,7 @@ export default {
                         title: 'User Added Successfully',
                         showConfirmButton: false,
                     }).then(() => {
+                        this.$emit('update:editBtn', false);
                         this.$emit('update:showModal', false);
                         window.location.reload();
                         this.resetForm();
@@ -156,10 +165,52 @@ export default {
                 console.log(error);
             }
         },
+        async updateUser(formData, id) {
+            try {
+                const finalData = { id, ...formData };
+                console.log(formData);
+                const result = await this.editUser(finalData);
+                if (result) {
+                    Swal.fire({
+                        icon: 'success',
+                        timer: 1500,
+                        title: 'User Updated Successfully',
+                        showConfirmButton: false,
+                    }).then(() => {
+                        this.$emit('update:editBtn', false);
+                        this.$emit('update:showModal', false);
+                        window.location.reload();
+                        this.resetForm();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        timer: 1500,
+                        title: "Could Not update user some error occurred",
+                        showConfirmButton: false,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        },
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
     },
+    watch: {
+        data(newData) {
+            if (newData) {
+                this.form.username = newData.username || '';
+                this.form.email = newData.email || '';
+                this.form.cnic = newData.cnic || '';
+                this.form.mobile_no = newData.mobile_no || '';
+                this.form.roles = newData.roles || [];
+            }
+        }
+    }
 };
 </script>
 

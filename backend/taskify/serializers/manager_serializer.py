@@ -4,9 +4,8 @@ from taskify.models import Manager
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manager
-        fields = ['id', 'full_name', 'experience', 'department']
+        fields = ['id', 'full_name', 'experience', 'department', 'user']
     
-
     def create(self, validated_data):
         user = self.context.get('user')
         if not user:

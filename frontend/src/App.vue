@@ -14,6 +14,9 @@ export default {
   methods: {
     ...mapActions(['loadUserData', 'currentUser']),
   },
+
+  // Can also add all the getData actions from store to fecth all the data at the start of app and then use getters to fetch data where needed inside of app.
+  // Or follow the approach followed here of fecthing data in individual components and views. Both are correct and based on choice can be selected.
 }
 
 </script>

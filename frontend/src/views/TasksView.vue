@@ -6,7 +6,7 @@
             :editData="editData" :deleteData="deleteData" hasCreatePermission="task_add"
             v-model:showModal="showModal" />
 
-        <tasks-create-edit-modal v-model:showModal="showModal" />
+        <tasks-create-edit-modal v-model:showModal="showModal" :data="taskData" v-model:editBtn="editBtn"/>
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -45,13 +45,18 @@ export default {
             ],
             items: null,
             showModal: false,
+            editBtn: false,
+            taskData: null,
             isLoading: false,
         }
     },
     methods: {
-        ...mapActions(['getTasksData', 'getTeamById', 'deleteTask']),
-        editData(data) {
-            console.log(data);
+        ...mapActions(['getTasksData', 'getTeamById', 'deleteTask', 'getTaskById']),
+        async editData(data) {
+            const task = await this.getTaskById(data.id);
+            this.taskData = task;
+            this.editBtn = true;
+            this.showModal = true;
         },
         async deleteData(data) {
             console.log(data.id);

@@ -2,10 +2,10 @@
     <div class="home d-flex flex-row">
         <sidebar class="col-12 col-lg-2" />
 
-        <data-table v-if="!isLoading" title="Taskify Roles List" tableTitle="Roles" :fields="fields" :items="items" :editData="editData"
-            :deleteData="deleteData" hasCreatePermission="role_add" v-model:showModal="showModal" />
+        <data-table v-if="!isLoading" title="Taskify Roles List" tableTitle="Roles" :fields="fields" :items="items" hasCreatePermission="role_add" 
+            v-model:showModal="showModal"/>
 
-        <role-create-edit-modal v-model:showModal="showModal" />
+        <role-create-modal v-model:showModal="showModal" />
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
         </div>
@@ -15,14 +15,14 @@
 <script>
 import Sidebar from '@/components/Sidebar.vue';
 import DataTable from '@/components/DataTable.vue';
-import RoleCreateEditModal from '@/components/RoleCreateEditModal.vue';
+import RoleCreateModal from '@/components/RoleCreateModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     components: {
         Sidebar,
         DataTable,
-        RoleCreateEditModal,
+        RoleCreateModal,
     },
     async mounted() {
         this.getRoles();
@@ -33,7 +33,6 @@ export default {
                 { key: 'index', label: "Id", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
                 { key: 'name', label: 'Name', thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'code_name', label: "Code Name", thStyle: { fontSize: "20px", color: "#242124", } },
-                { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
             showModal: false,
@@ -42,12 +41,6 @@ export default {
     },
     methods: {
         ...mapActions(['getRolesData']),
-        editData(data) {
-            console.log(data);
-        },
-        deleteData(data) {
-            console.log("delted role: ", data, " and id ", data.code_name);
-        },
         async getRoles() {
             this.isLoading = true;
             try {
