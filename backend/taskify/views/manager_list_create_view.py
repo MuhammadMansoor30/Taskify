@@ -5,14 +5,17 @@ from rest_framework.permissions import IsAuthenticated
 from taskify.models import Manager, User, Role
 from taskify.serializers import ManagerSerializer, UserSerializer
 from taskify.decorator import permission_required
+from taskify.filters import ManagerFilters
 
 class ManagerListCreateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ManagerSerializer
+    filterset_class = ManagerFilters
 
     @permission_required(['manager_get'])
     def get(self, *args, **kwargs):
         manager = Manager.objects.all()
+        manager = ManagerFilters(self.request.GET, queryset=manager).qs 
         serializer = self.serializer_class(manager, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

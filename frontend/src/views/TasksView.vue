@@ -6,12 +6,13 @@
             :editData="editData" :deleteData="deleteData" hasCreatePermission="task_add"
             v-model:showModal="showModal" />
 
-        <tasks-create-edit-modal v-model:showModal="showModal" :data="taskData" v-model:editBtn="editBtn"/>
+        <tasks-create-edit-modal v-model:showModal="showModal" :data="taskData" v-model:editBtn="editBtn" />
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
         </div>
     </div>
+    
 
 </template>
 <script>
@@ -26,7 +27,7 @@ export default {
     components: {
         Sidebar,
         DataTable,
-        TasksCreateEditModal
+        TasksCreateEditModal,
     },
     async mounted() {
         this.getTasks();
@@ -39,8 +40,9 @@ export default {
                 { key: 'team', label: "Team", thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'is_completed', label: "Is Completed", thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'priority', label: "Priority", thStyle: { fontSize: "20px", color: "#242124", } },
-                { key: 'assigned_to', label: "Assigned To", thStyle: { fontSize: "20px", color: "#242124", } },
-                { key: 'duration', label: "Duration Till", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'status', label: "Status", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'user_name', label: "Assigned To", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'duration', label: "Task Dealine", thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
             items: null,
@@ -102,7 +104,7 @@ export default {
             try {
                 const data = await this.getTasksData();
                 await Promise.all(data.map(async val => {
-                    const newDate = dayjs(val.duration).format('DD-MMM-YYYY');
+                    const newDate = dayjs(val.task_deadline).format('DD-MMM-YYYY');
                     if (val.team) {
                         const teamName = await this.getTeamName(val.team);
                         val.team = teamName['name'];
@@ -114,6 +116,7 @@ export default {
                     val.duration = newDate;
                 }));
                 this.items = data;
+                console.log(this.items);
                 this.isLoading = false;
             }
             catch (error) {

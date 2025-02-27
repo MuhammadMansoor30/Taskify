@@ -22,11 +22,14 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ['title']
     list_filter = ['team', 'priority', 'is_completed']
 
+class ManagerAdmin(admin.ModelAdmin):
+    list_filter = ['department']
+
 admin.site.register(Permission, PermissionAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Role)
 admin.site.register(Team)
-admin.site.register(Manager)
+admin.site.register(Manager, ManagerAdmin)
 admin.site.register(Developer, DeveloperAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(WorkItem, WorkItemAdmin)   # Registering the class to apply filters to admin site as well.

@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from taskify.models import Task, Team, User
 from taskify.serializers import TaskSerializer
 from taskify.decorator import permission_required
+from taskify.filters import TaskFilters, get_manager_or_developer
 
 class TaskListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -12,7 +13,16 @@ class TaskListCreateView(APIView):
 
     @permission_required(['tasks_get'])
     def get(self, *args, **kwargs):
-        tasks = Task.objects.all()
+        manager, developer = get_manager_or_developer(self.request.user)
+
+        if self.request.user.is_staff:
+            tasks = Task.objects.all()
+        elif manager is not None:
+            tasks = Task.objects.filter(team__manager = manager)
+        elif developer is not None:
+            tasks = Task.objects.filter(team__developers = developer)
+
+        tasks = TaskFilters(self.request.GET, queryset=tasks).qs
         task_ser = self.serializer_class(tasks, many=True)
         return Response(task_ser.data, status=status.HTTP_200_OK)
     
@@ -38,7 +48,8 @@ class TaskListCreateView(APIView):
                      "team": data.get('team'),
                      "is_completed": data.get('is_completed') or False,
                      "priority": data.get('priority'),
-                     "assigned_to": assigned_to}
+                     "assigned_to": assigned_to,
+                     "task_deadline": data.get('task_deadline')}
 
         task_ser = self.serializer_class(data=task_data, context={"created_by": user})
         if task_ser.is_valid():

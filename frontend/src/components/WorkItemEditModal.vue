@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Edit Work Item</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">Edit Work Item </h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="submitForm" class="text-start">
                 <b-form-group class="mb-2 fs-4" label="Work Item Name" label-for="textField"
@@ -117,8 +120,6 @@ export default {
             this.form.selectedTask = '';
             this.isFileSelected = false;
             this.isTaskSelected = false;
-            this.$emit('update:editBtn', false);
-            this.$emit('update:showModal', false);
         },
         async updateWorkItem(formData, id) {
             try {
@@ -161,7 +162,11 @@ export default {
         },
         handleFileUpload(event) {
             this.form.file = event.target.files[0];
-        }
+        },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     },
     watch: {
         data(newData) {
@@ -198,6 +203,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .clr {

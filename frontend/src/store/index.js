@@ -321,8 +321,14 @@ export default createStore({
 
     getWorkItemsData: async (context, payload) => {
       try {
-        const { is_approved } = payload;
-        const res = await fileApi.get(`workItems/?is_approved=${is_approved}`);
+        let res;
+        if(payload){
+          const { is_approved } = payload;
+          res = await fileApi.get(`workItems/?is_approved=${is_approved}`);
+        }
+        else{
+          res = await fileApi.get(`workItems/`);
+        }
         if (res.status === 200) {
           context.commit('setWorkItems', res.data);
           return res.data;

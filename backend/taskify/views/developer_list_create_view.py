@@ -6,6 +6,7 @@ from django.db.models import Q
 from taskify.models import Developer, Team, Manager, User, Role
 from taskify.serializers import DeveloperSerializer
 from taskify.decorator import permission_required
+from taskify.filters import DeveloperFilters, get_manager_or_developer
 
 class DeveloperListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -13,7 +14,14 @@ class DeveloperListCreateView(APIView):
 
     @permission_required(['developers_get'])
     def get(self, *args, **kwargs):
-        developers = Developer.objects.all()
+        manager, developer = get_manager_or_developer(self.request.user)
+
+        if self.request.user.is_staff:
+            developers = Developer.objects.all()
+        elif manager is not None:
+            developers = Developer.objects.filter(manager=manager)
+        
+        developers = DeveloperFilters(self.request.GET, queryset=developers).qs
         developer_ser = self.serializer_class(developers, many=True)
         return Response(developer_ser.data, status=status.HTTP_200_OK)
     

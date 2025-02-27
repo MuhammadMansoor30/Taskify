@@ -4,7 +4,7 @@
 
         <data-table v-if="!isLoading" title="Taskify Teams List" tableTitle="Teams" :fields="fields" :items="items"
             :editData="editData" :deleteData="deleteData" hasCreatePermission="team_add"
-            v-model:showModal="showModal" />
+            v-model:showModal="showModal" hasEditPermission="team_edit"/>
 
         <team-create-edit-modal v-model:showModal="showModal" :data="teamData" v-model:editBtn="editBtn" />
 

@@ -36,7 +36,7 @@ export default {
                 { key: 'name', label: 'Name', thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'fileName', label: "Work Item", thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'status', label: "Status", thStyle: { fontSize: "20px", color: "#242124", } },
-                { key: 'is_approved', label: "Is Approved", thStyle: { fontSize: "20px", color: "#242124", } },
+                { key: 'is_approved', label: "Is Approved", thStyle: { width: '120px', fontSize: "20px", color: "#242124", } },
                 { key: 'task', label: "Task", thStyle: { fontSize: "20px", color: "#242124", } },
                 { key: 'button', label: "Action", thStyle: { width: '200px', fontSize: "20px", color: "#242124", } },
             ],
@@ -83,7 +83,7 @@ export default {
         async getWorkItems() {
             this.isLoading = true;
             try {
-                const data = await this.getWorkItemsData({ is_approved: true });   // Fetch only approved Work Items
+                const data = await this.getWorkItemsData();   // Fetch only approved Work Items
                 await Promise.all(data.map(async val => {
                     const fileName = val.file.split('/')[2];
                     const taskName = await this.getTaskName(val.task);

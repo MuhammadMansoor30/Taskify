@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Add New Developer</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">Add New Task</h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="submitForm" class="text-start">
                 <b-form-group label="Task Title" label-for="title" class="fs-4">
@@ -12,7 +15,7 @@
                 <b-form-group label="Description" label-for="description" class="fs-4">
                     <b-form-textarea id="description" v-model="form.description" required
                         placeholder="Enter task description ....."
-                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="3"
+                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="2"
                         no-resize=""></b-form-textarea>
                 </b-form-group>
 
@@ -38,6 +41,10 @@
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
                     </b-form-select>
+                </b-form-group>
+
+                <b-form-group label="Select Deadline" label-for="deadline" class="fs-4">
+                    <input type="date" id="deadline" class="form-control fs-5" v-model="form.task_deadline" />
                 </b-form-group>
 
                 <b-form-group label="Assign To" label-for="assignto" class="fs-4">
@@ -80,6 +87,7 @@ export default {
                 is_completed: '',
                 priority: '',
                 assigned_to: '',
+                task_deadline: '',
             },
             passwordVisible: false,
             allTeams: null,
@@ -91,7 +99,7 @@ export default {
         ...mapActions(['addTask', 'getTeamsData', 'getUsersData', 'editTask']),
         async submitForm() {
             if (!this.editBtn) {
-                if (this.form.title && this.form.description && this.form.team && this.form.priority && this.form.assigned_to) {
+                if (this.form.title && this.form.description && this.form.team && this.form.priority && this.form.assigned_to && this.form.task_deadline) {
                     this.isLoading = true;
                     await this.addNewTask(this.form);
                     this.isLoading = false;
@@ -119,8 +127,7 @@ export default {
             this.form.is_completed = '';
             this.form.priority = '';
             this.form.assigned_to = '';
-            this.$emit('update:editBtn', false);
-            this.$emit('update:showModal', false);
+            this.form.task_deadline = '';
         },
         async addNewTask(formData) {
             try {
@@ -205,6 +212,10 @@ export default {
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     },
     watch: {
         data(newData) {
@@ -241,6 +252,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover{
+    cursor: pointer;
 }
 
 .clr {
