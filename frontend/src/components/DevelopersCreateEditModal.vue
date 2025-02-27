@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Add New Developer</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">{{editBtn ? "Edit Developer" : "Add New Developer"}}</h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="submitForm" class="text-start">
                 <div class="d-flex d-row">
@@ -87,7 +90,7 @@
                 <b-button-toolbar class="mt-3 justify-content-end">
                     <button class="btn fs-5 btn-danger clr-1 rounded-5" @click="resetForm">Reset</button>
                     <button type="submit" class="btn clr fs-5 rounded-5 ms-4" @click.prevent="submitForm">{{ editBtn ?
-                        "Edit" : "Add"}}</button>
+                        "Edit" : "Add" }}</button>
                 </b-button-toolbar>
             </form>
             <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
@@ -166,7 +169,6 @@ export default {
             this.form.skill_set = '';
             this.form.manager = '';
             this.form.team = '';
-            this.$emit('update:showModal', false);
         },
         async addNewDeveloper(formData) {
             try {
@@ -267,6 +269,10 @@ export default {
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     },
     watch: {
         // Name/key of watch should be same as the item we want to watch for changes. 
@@ -319,6 +325,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .clr {

@@ -1,6 +1,10 @@
 <template>
     <div>
         <div class="sidebar text-dark">
+            <div class="py-3 me-3">
+                <user-detail />
+            </div>
+
             <b-navbar toggleable="lg" type="light" class="border-bottom">
                 <b-navbar-brand href="#" class="font-weight-bold">
                     Taskify Functions
@@ -24,20 +28,24 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import UserDetail from './UserDetail.vue';
 
 export default {
+    components: {
+        UserDetail
+    },
     methods: {
         ...mapGetters(['getNavMenuItems']),
         navigateTo(page) {
             this.$router.push({ name: page });
         },
-        async signOut(){
-            try{
+        async signOut() {
+            try {
                 const res = await this.$store.dispatch("logout");
-                this.$router.replace({name: 'login'});   // To remove all the previous router history
+                this.$router.replace({ name: 'login' });   // To remove all the previous router history
                 return res;
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
@@ -55,7 +63,6 @@ export default {
     display: flex;
     flex-direction: column;
     width: 320px;
-    padding-top: 30px;
     position: fixed;
     height: 100%;
     left: 0;

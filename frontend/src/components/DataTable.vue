@@ -26,7 +26,7 @@
                             <span class="text-dark font-weight-bold fs-4">{{ data.value }}</span>
                         </template>
 
-                        <template #cell(button)="data">
+                        <template #cell(button)="data" v-if="editPermission">
                             <div class="d-flex justify-content-evenly">
                                 <button class="btn clr" @click="editData(data.item)" v-if="!this.approvalPermission">Edit</button>
                                 <button class="btn btn-danger" @click="deleteItem(data.item)" v-if="!this.approvalPermission">Delete</button>
@@ -48,15 +48,19 @@ export default {
     mounted() {
         this.permission = this.hasPermissions(this.hasCreatePermission);
         this.approvalPermission = this.hasPermissions(this.hasApprovalPermission);
+        if(this.hasEditPermission){
+            this.editPermission = this.hasPermissions(this.hasEditPermission);
+        }
     },
     data() {
         return {
             permission: false,
             approvalPermission: false,
+            editPermission: true,
             tableItems: null,
         }
     },
-    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'approveWork', 'hasCreatePermission', 'hasApprovalPermission', 'showModal'],
+    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'approveWork', 'hasCreatePermission', 'hasApprovalPermission', 'hasEditPermission','showModal'],
     computed: {
         ...mapGetters(['hasPermissions']),
     },

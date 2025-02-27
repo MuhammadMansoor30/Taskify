@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Add New Role</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">Add New Role</h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="handleSubmit" class="text-start">
                 <b-form-group label="Name" label-for="name" class="fs-4">
@@ -82,7 +85,6 @@ export default {
             this.form.code_name = '';
             this.form.permissions = [];
             this.isPermSelected = false;
-            this.$emit('update:showModal', false);
         },
         async addNewRole(formData) {
             try {
@@ -120,7 +122,11 @@ export default {
             catch(error){
                 console.log(error);
             }
-        }
+        },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     }
 };
 </script>
@@ -146,6 +152,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .clr {

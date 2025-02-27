@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Add New User</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">{{editBtn ? "Edit User" : "Add New User"}}</h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="submitForm" class="text-start">
                 <b-form-group label="Username" label-for="username" class="fs-4">
@@ -123,8 +126,6 @@ export default {
             this.form.cnic = '';
             this.form.mobile_no = '';
             this.form.roles = '';
-            this.$emit('update:editBtn', false);
-            this.$emit('update:showModal', false);
         },
         async addNewUser(formData) {
             try {
@@ -199,6 +200,10 @@ export default {
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     },
     watch: {
         data(newData) {
@@ -235,6 +240,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .clr {

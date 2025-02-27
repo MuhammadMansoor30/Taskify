@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from taskify.models import WorkItem
+from taskify.models import WorkItem,Task
 from taskify.serializers import WorkItemSerializer
 from taskify.decorator import permission_required
 import os
@@ -68,4 +68,14 @@ class WorkItemApproveView(APIView):
         workItem.is_approved = True
         workItem.save()
 
+        workItem_ser = self.serializer_class(workItem).data
+
+        try:
+            task = Task.objects.get(id=workItem_ser['task'])
+        except Task.DoesNotExist:
+            return Response({"Msg": "Task for the provided id does not exist!"}, status=status.HTTP_404_NOT_FOUND)
+        
+        task.status = 'Approved'
+        task.save()
+        
         return Response({"Msg": "Approved Successfully"}, status=status.HTTP_200_OK)

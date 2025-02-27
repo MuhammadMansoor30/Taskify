@@ -32,6 +32,7 @@ class TaskUpdateDestroyView(APIView):
 
         if task_ser.is_valid():
             task_ser.save()
+            print(task_ser.data)
             return Response(task_ser.data, status=status.HTTP_200_OK)
         else:
             print(task_ser.errors)

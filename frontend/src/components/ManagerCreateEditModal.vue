@@ -1,7 +1,10 @@
 <template>
     <div v-if="showModal" class="modal-overlay">
         <div class="custom-modal rounded-5">
-            <h2 class="mb-4 fw-bold">Add New Role</h2>
+            <div class="d-flex flex-row header">
+                <h2 class="mb-4 fw-bold">{{editBtn ? "Edit Manager" : "Add New Manager"}}</h2>
+                <i class="fas fa-close fs-2 icon" @click="modalClose"></i>
+            </div>
 
             <form v-if="!isLoading" @submit.prevent="handleSubmit" class="text-start">
                 <div class="d-flex d-row">
@@ -140,8 +143,6 @@ export default {
             this.form.mobile_no = '';
             this.form.experience = '';
             this.form.department = '';
-            this.$emit('update:editBtn', false);
-            this.$emit('update:showModal', false);
         },
         async addNewManager(formData) {
             try {
@@ -221,6 +222,10 @@ export default {
         togglePasswordVisibility() {
             this.passwordVisible = !this.passwordVisible;
         },
+        modalClose() {
+            this.$emit('update:editBtn', false);
+            this.$emit('update:showModal', false);
+        },
     },
     watch: {
         // Watching for data prop for changes so that they are rendered asap.
@@ -260,6 +265,16 @@ export default {
     width: 70%;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    width: 57%;
+    margin-left: 42%;
+    justify-content: space-between;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .clr {
