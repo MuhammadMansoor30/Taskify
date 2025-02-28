@@ -4,9 +4,11 @@
 
         <data-table v-if="!isLoading" title="Taskify Tasks List" tableTitle="Tasks" :fields="fields" :items="items"
             :editData="editData" :deleteData="deleteData" hasCreatePermission="task_add"
-            v-model:showModal="showModal" />
+            v-model:showModal="showModal"  v-model:descModal="descModal" v-model:task="task" />
 
         <tasks-create-edit-modal v-model:showModal="showModal" :data="taskData" v-model:editBtn="editBtn" />
+
+        <task-description-modal v-model:descModal="descModal" v-model:task="task"/>
 
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center mb-3 w-100">
             <b-spinner></b-spinner>
@@ -19,6 +21,7 @@
 import Sidebar from '@/components/Sidebar.vue';
 import DataTable from '@/components/DataTable.vue';
 import TasksCreateEditModal from '@/components/TasksCreateEditModal.vue';
+import TaskDescriptionModal from '@/components/TaskDescriptionModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 import dayjs from 'dayjs';
 import Swal from 'sweetalert2';
@@ -28,6 +31,7 @@ export default {
         Sidebar,
         DataTable,
         TasksCreateEditModal,
+        TaskDescriptionModal,
     },
     async mounted() {
         this.getTasks();
@@ -47,9 +51,11 @@ export default {
             ],
             items: null,
             showModal: false,
+            descModal: false,
             editBtn: false,
             taskData: null,
             isLoading: false,
+            task: null,
         }
     },
     methods: {

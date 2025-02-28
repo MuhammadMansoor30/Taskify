@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from taskify.models import WorkItem, Task
 from taskify.serializers import WorkItemSerializer
 from taskify.decorator import permission_required
-from taskify.filters import WorkItemFilters
+from taskify.filters import WorkItemFilters, get_manager_or_developer
 
 class WorkItemListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -14,7 +14,15 @@ class WorkItemListCreateView(APIView):
 
     @permission_required(['work_get'])
     def get(self, *args, **kwargs):
-        workItems = WorkItem.objects.all()
+        manager, developer = get_manager_or_developer(self.request.user)
+        
+        if self.request.user.is_staff:
+            workItems = WorkItem.objects.all()
+        elif manager is not None:
+            workItems = WorkItem.objects.filter(task__team__manager=manager) 
+        elif developer is not None:
+            workItems = WorkItem.objects.filter(task__team__developers=developer) 
+
         workItems = WorkItemFilters(self.request.GET, queryset=workItems).qs    # Gets the queryset using the query params from the url and applies filters
         workItem_ser = self.serializer_class(workItems, many=True)
         return Response(workItem_ser.data, status=status.HTTP_200_OK)
