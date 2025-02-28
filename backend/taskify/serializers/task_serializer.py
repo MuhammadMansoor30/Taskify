@@ -8,7 +8,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'title', 'team', 'is_completed', 'priority', 'status', 'assigned_to', 'task_deadline']
+        fields = ['id', 'title', 'description', 'team', 'is_completed', 'priority', 'status', 'assigned_to', 'task_deadline']
     
     def to_representation(self, instance):
         user_name = instance.assigned_to.username

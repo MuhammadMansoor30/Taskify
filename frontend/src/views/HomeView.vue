@@ -4,23 +4,28 @@
 
     <div class="flex-grow-1 p-3">
       <h2 class="my-4">Welcome To Taskify</h2>
+      <div class="d-flex flex-wrap p-5">
+        <home-page-card />
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar.vue';
+import HomePageCard from '@/components/HomePageCard.vue';
 
 export default {
   components: {
     Sidebar,
+    HomePageCard,
   },
 };
 </script>
 
 <style scoped>
 .home {
-  display: flex;
   min-height: 100vh;
 }
 
@@ -40,7 +45,7 @@ export default {
 }
 
 .flex-grow-1 {
-  margin-left: 250px;
+  margin-left: 16%;
   /* Leave space for the sidebar */
 }
 

@@ -15,8 +15,7 @@
                 <b-form-group label="Description" label-for="description" class="fs-4">
                     <b-form-textarea id="description" v-model="form.description" required
                         placeholder="Enter task description ....."
-                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="2"
-                        no-resize=""></b-form-textarea>
+                        :class="{ 'is-invalid': form.description.length > 350, 'fs-5': true }" rows="2"></b-form-textarea>
                 </b-form-group>
 
                 <b-form-group label="Select Team" label-for="team" class="fs-4">

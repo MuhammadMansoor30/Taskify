@@ -23,7 +23,7 @@
                         </template>
 
                         <template #cell()="data">
-                            <span class="text-dark font-weight-bold fs-4">{{ data.value }}</span>
+                            <span class="text-dark font-weight-bold fs-4" @click="setDescModal(data.item)">{{ data.value }}</span>
                         </template>
 
                         <template #cell(button)="data" v-if="editPermission">
@@ -60,14 +60,19 @@ export default {
             tableItems: null,
         }
     },
-    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'approveWork', 'hasCreatePermission', 'hasApprovalPermission', 'hasEditPermission','showModal'],
+    props: ['title', 'tableTitle', 'fields', 'items', 'editData', 'deleteData', 'approveWork', 'hasCreatePermission', 'hasApprovalPermission', 
+            'hasEditPermission','showModal', 'descModal', 'task'],
     computed: {
         ...mapGetters(['hasPermissions']),
     },
     methods: {
         setShowModal(){
-            this.$emit('update:showModal', true);   // We cannot directly modify the value of props in vue so w ehave to emit event to modify its values from parent.
+            this.$emit('update:showModal', true);   // We cannot directly modify the value of props in vue so we have to emit event to modify its values from parent.
             // For that we have to pass the props as a v-model property. 
+        },
+        setDescModal(data){
+            this.$emit('update:descModal', true); 
+            this.$emit('update:task', data);    // Updating task prop here so that we can pass it to other child component from the parent.
         },
         deleteItem(item){
             Swal.fire({
