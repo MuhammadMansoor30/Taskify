@@ -17,6 +17,7 @@ class DeveloperSerializer(serializers.ModelSerializer):
 # POINTS:
 # This create method is added so that we can pass in the user data from the view to serailzer for validtaion but dont include it in the final serializer data.
 # This will only validate the data against user and not add it in the final response coming from the serializer. Same in Manager model as well.
+# It will create the user using this validated data checking whether use ris provided or not.
 
 # We can create/add to_representation method in the serialzier to modify the final data response of the serializer class.
 # Using it we can get the names and titles for the manager and team using their ids in to_representation method and pass it as final reponse.

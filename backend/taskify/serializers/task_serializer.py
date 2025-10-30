@@ -29,6 +29,9 @@ class TaskSerializer(serializers.ModelSerializer):
     
     # If we want to validate some fields like user or others and we dont want to pass it in the final serailizer response then we can use its create method and pass fields as a context to the serializer to validate them and create object based on those.
 
+    # We can alos apply validations in the serializer using the validate method.
+    # The create and update method are used for custom logic for creating and updating objects using serializer.
+
     # def get_duration(self, obj):
     #     priority = obj.priority
     #     if priority == 'Low':
