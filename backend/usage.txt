@@ -1,6 +1,6 @@
 Steps to Use the taskify Application
 
--> Add Permissions and Admin role using add_data.py script. This also created a new Admin user.
+-> Add Permissions and Admin role using add_data.py script. This also creates a new Admin user.
 -> Add Other Role after that as per need for other Users.
 -> Add Manager user to the aplication.
 -> Add Team associated with that manager to the app.
@@ -8,5 +8,5 @@ Steps to Use the taskify Application
 -> Add Task as task is associated with Manager, team and developer.
 -> Add Work associated with the Task.
 
-->  To generate Api Keys for the fontend applications to access the Django server we will install api-key package using: djangorestframework-api-key=={version no}
+-> To generate Api Keys for the frontend application to access the Django server we will install api-key package using: djangorestframework-api-key=={version no}
 -> Then add it in the settings.py file under the installed apps and apply migrations. The Api Keys will appeasr in the Admin panel and we can add keys now.

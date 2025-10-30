@@ -59,5 +59,5 @@ class ManagerListCreateView(APIView):
 
 # Imp Point:
 # We can create a user using simple Model instance like we did it with User or we can use Serializer to create user like we did with the Manager.
-# The Manager can also be created like the way user is craeted but for practice purpose I have used Serializer here.
+# The Manager can also be created like the way user is created but for practice purpose I have used Serializer here.
 # Passing the user as a context is becuase we dont require user field in seriaalizer so it will be added explicitly using the serializer. If we had the user field then we would pass the user as data.
