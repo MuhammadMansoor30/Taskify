@@ -46,6 +46,7 @@ class TeamListCreateView(APIView):
         #     return Response({"Msg": "Manager for the provided Id does not exist!"}, status=status.HTTP_404_NOT_FOUND)
         # We dont need to explictely get the Manager and then pass to serialzier rather it will automatically get the Manager obj instance using the manager id passed
         
+        print(request.user.id)
         team_ser = self.serializer_class(data={'name': name, 'description': description, 'project_name': project_name, 'manager': manager, 
                                                'developers': developers, 'created_by': user})
 

@@ -122,7 +122,7 @@ export default {
         async addNewTeam(formData) {
             try {
                 const data = await this.addTeam(formData);
-                if (data) {
+                if (data.status === 201) {
                     Swal.fire({
                         icon: 'success',
                         timer: 1500,

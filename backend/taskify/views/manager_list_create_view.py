@@ -6,6 +6,7 @@ from taskify.models import Manager, User, Role
 from taskify.serializers import ManagerSerializer, UserSerializer
 from taskify.decorator import permission_required
 from taskify.filters import ManagerFilters
+from django.db import transaction
 
 class ManagerListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -42,19 +43,19 @@ class ManagerListCreateView(APIView):
 
         role = Role.objects.get(code_name='mng')
 
-        user = User.objects.create_user(username=username, email=email, password=password, cnic=cnic, mobile_no=mobile_no)
-        user.roles.clear()
-        user.roles.add(role)
-        user.save()
+        with transaction.atomic():
+            user = User.objects.create_user(username=username, email=email, password=password, cnic=cnic, mobile_no=mobile_no)
+            user.roles.clear()
+            user.roles.add(role)
+            user.save()
 
-        manager_ser = self.serializer_class(data={'full_name': full_name,'experience': experience,'department': department}, context={"user": user})
-        if manager_ser.is_valid():
-            manager_ser.save()
-            return Response(manager_ser.data, status=status.HTTP_201_CREATED)
-        
-        else:
-            print(manager_ser.errors)
-            return Response({"Msg": "Invalid Data Passed"}, status=status.HTTP_400_BAD_REQUEST)
+            manager_ser = self.serializer_class(data={'full_name': full_name,'experience': experience,'department': department}, context={"user": user})
+            if manager_ser.is_valid():
+                manager_ser.save()
+                return Response(manager_ser.data, status=status.HTTP_201_CREATED)
+            
+            else:
+                return Response({"Msg": "Invalid Data Passed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # Imp Point:
