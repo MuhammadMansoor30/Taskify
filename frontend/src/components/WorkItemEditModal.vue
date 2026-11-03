@@ -40,7 +40,7 @@
 
                 <b-form-group class="mb-2 fs-4" label="Select Task" label-for="selectField2" :invalid="isTaskSelected"
                     invalid-feedback="Please select a task.">
-                    <b-form-select id="selectField2" class="form-select fs-5" v-model="form.selectedTask"
+                    <b-form-select id="selectField2" class="form-select fs-5" v-model="form.task"
                         :class="{ 'is-invalid': isTaskSelected }" required>
                         <option value="">Please Select</option>
                         <option v-for="(task, index) in tasks" :key="index" :value="task.id">{{ task.title }}
@@ -76,7 +76,7 @@ export default {
                 is_approved: '',
                 file: '',
                 status: '',
-                selectedTask: '',
+                task: '',
             },
             tasks: null,
             isFileSelected: false,
@@ -93,7 +93,7 @@ export default {
     methods: {
         ...mapActions(['addUser', 'editUser', 'getTasksData', 'editWorkItem']),
         async submitForm() {
-            if (this.form.selectedTask && this.form.file) {
+            if (this.form.task && this.form.file) {
                 this.isFileSelected = false;
                 this.isTaskSelected = false;
                 this.isLoading = true;
@@ -117,7 +117,7 @@ export default {
             this.form.is_approved = '';
             this.form.file = '';
             this.form.status = '';
-            this.form.selectedTask = '';
+            this.form.task = '';
             this.isFileSelected = false;
             this.isTaskSelected = false;
         },
@@ -175,7 +175,7 @@ export default {
                 this.form.file = newData.file || '';
                 this.form.is_approved = newData.is_approved ? "True" : 'False';
                 this.form.status = newData.status || '';
-                this.form.selectedTask = newData.task || "";
+                this.form.task = newData.task || "";
             }
         }
     }

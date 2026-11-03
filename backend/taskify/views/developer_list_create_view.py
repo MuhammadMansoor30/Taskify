@@ -59,7 +59,7 @@ class DeveloperListCreateView(APIView):
                     "experience": data.get("experience"), 
                     "skill_set": data.get("skill_set"),
                     "manager": data.get("manager"), 
-                    "team": data.get("team")}
+                    "team": data.get("team", None)}
 
         developer_ser = self.serializer_class(data=dev_data, context={"user": user})
         if developer_ser.is_valid():
